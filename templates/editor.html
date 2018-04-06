@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<title>ACE in Action</title>
+<style type="text/css" media="screen">
+    #editor {
+        position: relative;
+        left: 50px;
+        width: 800px;
+        height: 700px;
+    }
+</style>
+</head>
+<body>
+<table>
+    <tr>
+        <div>
+            <p><header>This is the header</header></p>
+        </div>
+    </tr>
+    <tr>
+
+    </tr>
+        <div id="editor">#include &lt;stdio.h&gt;
+
+int main(){
+    printf("Hahahd daddad");
+}
+        </div>
+    </tr>
+    <tr>
+        <div>
+            <p>After finish writing the code, click the button below to run</p>
+            <button onclick="run_program()" type="button" name="runbtn">Run program</button>
+        </div>
+    </tr>
+    <tr>
+        <p>Here is the result of the program</p>
+    </tr>
+    <tr>
+        <textarea rows="50" cols="200" id="output">
+
+        </textarea>
+    </tr>
+</table>
+<script src="{% static "ace/ace.js" %}" type="text/javascript" charset="utf-8"></script>
+<script>
+    let editor = ace.edit("editor");
+    editor.setTheme("ace/theme/monokai");
+    editor.session.setMode("ace/mode/c_cpp");
+    editor.setFontSize(15);
+
+    function run_program(){
+        var text = editor.getValue();
+        $.ajax({
+            type: "POST",
+            url: "{% url 'editor' %}",
+            data: {
+                "text": text
+            },
+            success: function(result){
+                let console = document.getElementById("output");
+                console.value = result;
+            } 
+        });
+    }
+
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+    </script>
+    {% csrf_token %}
+        <script type="text/javascript">
+        // using jQuery
+        let csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+    </script>
+</body>
+</html>
