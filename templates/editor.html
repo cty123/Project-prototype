@@ -2,19 +2,9 @@
 {% load static %}
 <html lang="en">
 <head>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<title>ACE in Action</title>
+    <title>ACE in Action</title>
+    <link rel="stylesheet" href="https://unpkg.com/blaze@4.0.0-6/scss/dist/blaze.min.css">
 <style type="text/css" media="screen">
-
-    #header {
-        top: 0px;
-        left: 0px;
-        width: 100%;
-        height: 100px;
-        position: fixed;
-        overflow-x: hidden;
-        z-index: 100;
-    }
 
     #body {
         top: 100px;
@@ -43,7 +33,11 @@
 </style>
 </head>
 <body>
-    <div id="header">This is the header</div>
+    <ul class="c-nav c-nav--inline">
+        <li class="c-nav__item"><i class="fas fa-home"></i> Editor</li>
+        <li class="c-nav__item"><i class="fas fa-star"></i> Files</li>
+        <li class="c-nav__item c-nav__item--right"><i class="fas fa-user"></i> Login</li>
+    </ul>
 
     <div id="body">
 
@@ -86,6 +80,7 @@
         </textarea>
 
     </div>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script src="{% static "ace/ace.js" %}" type="text/javascript" charset="utf-8"></script>
 <script>
     let editor = ace.edit("editor");
