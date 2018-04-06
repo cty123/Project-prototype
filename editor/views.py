@@ -8,10 +8,17 @@ from django.http import HttpResponse
 class EditorView(View):
 
     def get(self, request):
+        """Shows the editor."""
+
         return render(request, "editor.html", {})
 
     def post(self, request):
+        """Runs the user-entered code."""
+
         code = request.POST.get("text")
+        language = request.POST.get("language")
+        flags = request.POST.get("flags")
+
         f = open("test.c", "w+")
         f.write(code)
         f.close()

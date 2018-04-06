@@ -30,6 +30,19 @@
         width: 100%;
         height: 700px;
     }
+
+    #editor_run {
+        position: relative;
+        width: 100%;
+        padding-top: 5px;
+    }
+
+    #editor_run_btn {
+        width: 10%;
+    }
+
+    #editor_run_args {
+    }
 </style>
 </head>
 <body>
@@ -41,41 +54,56 @@
 
     <div id="body">
 
-        <div id="editor_controls">
-            <div class="editor_control_item">
-                Language:
-                <select id="language">
-                    <option value="c">C</option>
-                    <option value="cpp">C++</option>
-                    <option value="java">Java</option>
-                    <option value="python">Python</option>
-                </select>
+        <div class="c-input-group">
+            <div class="o-field">
+                <label class="c-field">
+                    Language:
+                    <select id="language" class="c-field">
+                        <option value="c">C</option>
+                        <option value="cpp">C++</option>
+                        <option value="java">Java</option>
+                        <option value="python">Python</option>
+                    </select>
+                </label>
             </div>
-            <div class="editor_control_item">
-                Theme:
-                <select id="theme">
-                    <option value="monokai">Monokai</option>
-                    <option value="solarized_light">Solarized Light</option>
-                    <option>MORE TO COME</option>
-                </select>
+            <div class="o-field">
+                <label class="c-field">
+                    Theme:
+                    <select id="theme" class="c-field">
+                        <option value="monokai">Monokai</option>
+                        <option value="solarized_light">Solarized Light</option>
+                        <option>MORE TO COME</option>
+                    </select>
+                </label>
             </div>
-            <div class="editor_control_item">
-                Font size:
-                <input type="number" size="2" maxlength="2" min="1" /> px
+            <div class="o-field">
+                <label class="c-field">
+                    Font size:
+                    <input type="number" size="2" maxlength="2" min="1" class="c-field" />
+                </label>
             </div>
-            <div class="editor_control_item">
-                <input type="checkbox" /> Use vim controls
+            <div class="o-field">
+                <label class="c-field">
+                    Controls:
+                    <select id="controls" class="c-field">
+                        <option value="monokai">Normal</option>
+                        <option value="solarized_light">Vim</option>
+                    </select>
+                </label>
             </div>
+            <button class="c-button c-button--success" style="padding: 15px">Save</button>
         </div>
         <div id="editor">//write your code here!</div>
 
-        <div>
-            <p>After finish writing the code, click the button below to run</p>
-            <button onclick="run_program()" type="button" name="runbtn">Run program</button>
+        <div id="editor_run" class="c-input-group">
+            <input type="button" class="c-button c-button--success" onclick="run_program()" name="editor_run_btn" id="editor_run_btn" value="Run program!" />
+            <div class="o-field">
+                <input type="text" class="c-field" placeholder="(optional) command line arguments" name="editor_run_args" id="editor_run_args"/>
+            </div>
         </div>
 
         <p>Here is the result of the program</p>
-        <textarea rows="50" cols="200" id="output">
+        <textarea class="c-field" rows="20" cols="200" id="output">
 
         </textarea>
 
