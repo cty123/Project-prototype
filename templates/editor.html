@@ -19,6 +19,7 @@
             editor.session.setMode("ace/mode/c_cpp");
             editor.setFontSize(12);
 
+            // Handler: run the code
             $("#editor_run_btn").click(() => {
                 let text = editor.getValue();
                 $.ajax({
@@ -27,19 +28,33 @@
                     data: {
                         "text": text
                     },
-                    success: function(result){
-                        let console = document.getElementById("output");
-                        console.value = result;
+                    success: (result) => {
+                        $("#output").val(result);
                     }
                 });
             });
 
-            function csrfSafeMethod(method) {
+            // Handler: change font size
+            $("#editor_control_size").change((event) => {
+                editor.setFontSize(parseInt($(event.target()).val()));
+            });
+
+            // Handler: change theme
+            $("#editor_control_theme").change((event) => {
+                editor.setTheme("ace/theme/" + $(event.target).val());
+            });
+
+            // Handler: change keybindings
+            $("#editor_control_keybindings").change((event) => {
+                editor.setKeyboardHandler($(event.target).val());
+            });
+
+            let csrfSafeMethod = (method) =>{
                 // these HTTP methods do not require CSRF protection
                 return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-            }
+            };
             $.ajaxSetup({
-                beforeSend: function(xhr, settings) {
+                beforeSend: (xhr, settings) => {
                     if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
                         xhr.setRequestHeader("X-CSRFToken", csrftoken);
                     }
@@ -61,7 +76,7 @@
             <div class="o-field">
                 <label class="c-field">
                     Language:
-                    <select id="language" class="c-field">
+                    <select class="c-field" id="editor_control_language">
                         <option value="c">C</option>
                         <option value="cpp">C++</option>
                         <option value="java">Java</option>
@@ -72,8 +87,10 @@
             <div class="o-field">
                 <label class="c-field">
                     Theme:
-                    <select id="theme" class="c-field">
+                    <select class="c-field" id="editor_control_theme">
                         <option value="monokai">Monokai</option>
+                        <option value="github">GitHub</option>
+                        <option value="solarized_dark">Solarized Dark</option>
                         <option value="solarized_light">Solarized Light</option>
                         <option>MORE TO COME</option>
                     </select>
@@ -82,15 +99,15 @@
             <div class="o-field">
                 <label class="c-field">
                     Font size:
-                    <input type="number" size="2" maxlength="2" min="1" class="c-field" value="12" />
+                    <input type="number" size="2" maxlength="2" min="1" class="c-field" value="12" id="editor_control_size" />
                 </label>
             </div>
             <div class="o-field">
                 <label class="c-field">
                     Controls:
-                    <select id="controls" class="c-field">
-                        <option value="monokai">Normal</option>
-                        <option value="solarized_light">Vim</option>
+                    <select class="c-field" id="editor_control_keybindings">
+                        <option value="">Normal</option>
+                        <option value="ace/keyboard/vim">Vim</option>
                     </select>
                 </label>
             </div>
@@ -105,10 +122,10 @@
             </div>
         </div>
 
-        <p>Here is the result of the program</p>
-        <textarea class="c-field" rows="20" cols="200" id="output">
+        <p><label for="output">Program output:</label>
+        <textarea class="c-field" rows="20" cols="200" id="output" name="output">
 
-        </textarea>
+        </textarea></p>
 
     </div>
 
