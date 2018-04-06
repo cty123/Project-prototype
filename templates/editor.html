@@ -6,18 +6,24 @@
     <link rel="stylesheet" href="https://unpkg.com/blaze@4.0.0-6/scss/dist/blaze.min.css" />
     <link rel="stylesheet" href="{% static "css/editor.css" %}" />
 
+    <script src="{% static "js/storage.js" %}" type="text/javascript" charset="utf-8"></script>
+
     <script src="{% static "jquery/jquery-3.3.1.min.js" %}" type="text/javascript" charset="utf-8"></script>
     <script src="{% static "ace/ace.js" %}" type="text/javascript" charset="utf-8"></script>
 
     <script type="text/javascript">
         let editor;
         let csrftoken;
+        let settings;
         $(document).ready(() => {
 
+            settings = storage.get_values();
+
             editor = ace.edit("editor");
-            editor.setTheme("ace/theme/monokai");
-            editor.session.setMode("ace/mode/c_cpp");
-            editor.setFontSize(12);
+            editor.setTheme("ace/theme/" + settings.theme);
+            editor.session.setMode("ace/mode/" + settings.language);
+            editor.setFontSize(parseInt(settings.font_size))
+            editor.setKeyboardHandler(settings.controls);
 
             // Handler: run the code
             $("#editor_run_btn").click(() => {
@@ -36,17 +42,25 @@
 
             // Handler: change font size
             $("#editor_control_size").change((event) => {
-                editor.setFontSize(parseInt($(event.target()).val()));
+                try {
+                    let font_size = parseInt($(event.target).val())
+                    editor.setFontSize(font_size);
+                    storage.set_values({font_size: font_size});
+                } catch (e) {}
             });
 
             // Handler: change theme
             $("#editor_control_theme").change((event) => {
-                editor.setTheme("ace/theme/" + $(event.target).val());
+                let theme = $(event.target).val();
+                editor.setTheme("ace/theme/" + theme);
+                storage.set_values({theme: theme});
             });
 
             // Handler: change keybindings
             $("#editor_control_keybindings").change((event) => {
-                editor.setKeyboardHandler($(event.target).val());
+                let controls = $(event.target).val();
+                editor.setKeyboardHandler(controls);
+                storage.set_values({controls: controls});
             });
 
             let csrfSafeMethod = (method) =>{
