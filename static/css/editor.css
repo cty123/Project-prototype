@@ -1,8 +1,16 @@
+body {
+    font-family: "Arial", sans-serif;
+}
+
 #body {
-    top: 80px;
+    padding-top: 20px;
     position: absolute;
     left: 100px;
     right: 100px;
+}
+
+#editor_controls {
+    padding-top: 20px;
 }
 
 #editor {

@@ -78,15 +78,26 @@
     </script>
 </head>
 <body>
+
     <ul class="c-nav c-nav--inline">
-        <li class="c-nav__item"><i class="fas fa-home"></i> Editor</li>
-        <li class="c-nav__item"><i class="fas fa-star"></i> Files</li>
-        <li class="c-nav__item c-nav__item--right"><i class="fas fa-user"></i> Login</li>
+        <li class="c-nav__item">Editor</li>
+        <li class="c-nav__item">Files</li>
+        <li class="c-nav__item">Profile</li>
+        <li class="c-nav__item c-nav__item--right">Login/Register</li>
     </ul>
 
     <div id="body">
 
-        <div class="c-input-group">
+        <div class="c-card">
+            <div class="c-card__item c-card__item--success o-media">
+                <div class="o-media__body">
+                    <h2 class="c-heading">Welcome to the code editor</h2>
+                    <p class="c-paragraph">Some intro text would go here</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="c-input-group" id="editor_controls">
             <div class="o-field">
                 <label class="c-field">
                     Language:
@@ -125,6 +136,7 @@
                     </select>
                 </label>
             </div>
+            <button class="c-button c-button--error" style="padding: 15px">Load</button>
             <button class="c-button c-button--success" style="padding: 15px">Save</button>
         </div>
         <div id="editor">//write your code here!</div>
