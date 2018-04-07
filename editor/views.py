@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.views.generic import View
 from django.http import HttpResponse
 
+
 # Create your views here.
 class EditorView(View):
 
@@ -28,3 +29,11 @@ class EditorView(View):
         p.wait()
         result = p.stdout.read().decode("utf-8")
         return HttpResponse(result)
+
+
+class ProfileView(View):
+
+    def get(self, request):
+        """Shows the user profile."""
+
+        return render(request, "profile.html", {})

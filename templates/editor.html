@@ -2,7 +2,7 @@
 {% load static %}
 <html lang="en">
 <head>
-    <title>Code editor</title>
+    <title>Editor</title>
     <link rel="stylesheet" href="https://unpkg.com/blaze@4.0.0-6/scss/dist/blaze.min.css" />
     <link rel="stylesheet" href="{% static "css/editor.css" %}" />
 
@@ -80,10 +80,11 @@
 <body>
 
     <ul class="c-nav c-nav--inline">
-        <li class="c-nav__item">Editor</li>
+        <a href="{% url 'editor' %}"><li class="c-nav__item">Editor</li></a>
         <li class="c-nav__item">Files</li>
-        <li class="c-nav__item">Profile</li>
-        <li class="c-nav__item c-nav__item--right">Login/Register</li>
+        <a href="{% url 'profile' %}"><li class="c-nav__item">Profile</li></a>
+        <a href="{% url 'logout' %}"><li class="c-nav__item c-nav__item--right">Logout</li></a>
+        <a href="{% url 'login' %}"><li class="c-nav__item c-nav__item--right">Login/Register</li></a>
     </ul>
 
     <div id="body">
@@ -136,6 +137,7 @@
                     </select>
                 </label>
             </div>
+            <button class="c-button c-button--info" style="padding: 15px">Share</button>
             <button class="c-button c-button--error" style="padding: 15px">Load</button>
             <button class="c-button c-button--success" style="padding: 15px">Save</button>
         </div>
