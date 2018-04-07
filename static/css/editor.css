@@ -9,6 +9,13 @@ body {
     right: 100px;
 }
 
+#body_login {
+    padding-top: 20px;
+    position: absolute;
+    left: 300px;
+    right: 300px;
+}
+
 #editor_controls {
     padding-top: 20px;
 }

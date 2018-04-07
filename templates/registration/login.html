@@ -1,6 +1,69 @@
-<h2>Login</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Login</button>
-</form>
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <title>Login or register</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/blaze@4.0.0-6/scss/dist/blaze.min.css" />
+    <link rel="stylesheet" href="{% static "css/editor.css" %}" />
+
+    <script src="{% static "jquery/jquery-3.3.1.min.js" %}" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+
+    <ul class="c-nav c-nav--inline">
+        <li class="c-nav__item">Editor</li>
+        <li class="c-nav__item">Files</li>
+        <li class="c-nav__item">Profile</li>
+        <li class="c-nav__item c-nav__item--right">Login/Register</li>
+    </ul>
+
+    <div class="o-grid" id="body_login">
+        <div class="o-grid__cell">
+            <div class="o-grid-text">
+                <h1>Login</h1>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="c-input-group c-input-group--stacked">
+                        <div class="o-field">
+                            <input type="text" class="c-field" placeholder="Username">
+                        </div>
+                        <div class="o-field">
+                            <input type="password" class="c-field" placeholder="Password">
+                        </div>
+                        <div class="o-field">
+                            <button style="width: 100%" class="c-button c-button--success" type="submit">Login</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="o-grid__cell">
+            <div class="o-grid-text">
+                <h1>Register</h1>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="c-input-group c-input-group--stacked">
+                        <div class="o-field">
+                            <input type="text" class="c-field" placeholder="Username">
+                        </div>
+                        <div class="o-field">
+                            <input type="password" class="c-field" placeholder="Password">
+                        </div>
+                        <div class="o-field">
+                            <input type="password" class="c-field" placeholder="Repeat password">
+                        </div>
+                        <div class="o-field">
+                            <input type="email" class="c-field" placeholder="Email">
+                        </div>
+                        <div class="o-field">
+                            <button style="width: 100%" class="c-button c-button--success" type="submit">Register</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
