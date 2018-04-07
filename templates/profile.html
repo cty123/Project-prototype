@@ -12,8 +12,8 @@
 
     <ul class="c-nav c-nav--inline">
         <a href="{% url 'editor' %}"><li class="c-nav__item">Editor</li></a>
-        <li class="c-nav__item">Files</li>
-        <li class="c-nav__item">Profile</li>
+        <a href="{% url 'files' %}"><li class="c-nav__item">Files</li></a>
+        <a href="{% url 'profile' %}"><li class="c-nav__item">Profile</li></a>
         <a href="{% url 'logout' %}"><li class="c-nav__item c-nav__item--right">Logout</li></a>
         <a href="{% url 'login' %}"><li class="c-nav__item c-nav__item--right">Login/Register</li></a>
     </ul>
@@ -38,6 +38,9 @@
                             <input type="text" class="c-field" placeholder="Nickname">
                         </div>
                         <div class="o-field">
+                            <input type="email" class="c-field" placeholder="email">
+                        </div>
+                        <div class="o-field">
                             <input type="password" class="c-field" placeholder="Password">
                         </div>
                         <div class="o-field">
@@ -46,6 +49,7 @@
                     </div>
                 </form>
             </div>
+        </div>
     </div>
 
     {% csrf_token %}

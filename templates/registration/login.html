@@ -13,8 +13,8 @@
 
     <ul class="c-nav c-nav--inline">
         <a href="{% url 'editor' %}"><li class="c-nav__item">Editor</li></a>
-        <li class="c-nav__item">Files</li>
-        <li class="c-nav__item">Profile</li>
+        <a href="{% url 'files' %}"><li class="c-nav__item">Files</li></a>
+        <a href="{% url 'profile' %}"><li class="c-nav__item">Profile</li></a>
         <a href="{% url 'logout' %}"><li class="c-nav__item c-nav__item--right">Logout</li></a>
         <a href="{% url 'login' %}"><li class="c-nav__item c-nav__item--right">Login/Register</li></a>
     </ul>

@@ -17,11 +17,13 @@ from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path
 from django.contrib.auth import views as auth_views
-from editor.views import EditorView
+from editor.views import EditorView, ProfileView, FilesView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^login/$', auth_views.login, name='login'),
     url(r'^logout/$', auth_views.logout, name='logout'),
     url(r'^$', EditorView.as_view(), name='editor'),
+    url(r'^profile/$', ProfileView.as_view(), name='profile'),
+    url(r'^files/$', FilesView.as_view(), name='files')
 ]
