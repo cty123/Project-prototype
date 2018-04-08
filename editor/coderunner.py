@@ -21,16 +21,14 @@ def run_c(code, filename, flags):
     p.wait()
     compile_output = p.stdout.read().decode("utf-8")
     compile_error = p.stderr.read().decode("utf-8")
-    result.append(["COMPILE OUTPUT", compile_output])
-    result.append(["COMPILE ERROR", compile_error])
+    result.append(["COMPILER OUTPUT", compile_output + "\n" + compile_error])
 
     if os.path.isfile(executable):
         p = subprocess.Popen(["./" + executable] + flags, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         p.wait()
         run_output = p.stdout.read().decode("utf-8")
         run_error = p.stderr.read().decode("utf-8")
-        result.append(["EXECUTION OUTPUT", run_output])
-        result.append(["EXECUTION ERROR", run_error])
+        result.append(["EXECUTION OUTPUT", run_output + "\n" + run_error])
 
     # clean up
     os.remove(filename)
@@ -58,16 +56,14 @@ def run_cpp(code, filename, flags):
     p.wait()
     compile_output = p.stdout.read().decode("utf-8")
     compile_error = p.stderr.read().decode("utf-8")
-    result.append(["COMPILE OUTPUT", compile_output])
-    result.append(["COMPILE ERROR", compile_error])
+    result.append(["COMPILER OUTPUT", compile_output + "\n" + compile_error])
 
     if os.path.isfile(executable):
         p = subprocess.Popen(["./" + executable] + flags, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         p.wait()
         run_output = p.stdout.read().decode("utf-8")
         run_error = p.stderr.read().decode("utf-8")
-        result.append(["EXECUTION OUTPUT", run_output])
-        result.append(["EXECUTION ERROR", run_error])
+        result.append(["EXECUTION OUTPUT", run_output + "\n" + run_error])
 
     # clean up
     os.remove(filename)
@@ -95,16 +91,13 @@ def run_java(code, filename, flags):
     p.wait()
     compile_output = p.stdout.read().decode("utf-8")
     compile_error = p.stderr.read().decode("utf-8")
-    result.append(["COMPILE OUTPUT", compile_output])
-    result.append(["COMPILE ERROR", compile_error])
-
+    result.append(["COMPILER OUTPUT", compile_output + "\n" + compile_error])
     if os.path.isfile(executable + ".class"):
         p = subprocess.Popen(["java", executable] + flags, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         p.wait()
         run_output = p.stdout.read().decode("utf-8")
         run_error = p.stderr.read().decode("utf-8")
-        result.append(["EXECUTION OUTPUT", run_output])
-        result.append(["EXECUTION ERROR", run_error])
+        result.append(["EXECUTION OUTPUT", run_output + "\n" + run_error])
 
     # clean up
     os.remove(filename)
@@ -127,11 +120,10 @@ def run_python(code, filename, flags):
     f.close()
     p = subprocess.Popen(["python", filename] + flags, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     p.wait()
-    output = p.stdout.read().decode("utf-8")
-    error = p.stderr.read().decode("utf-8")
+    run_output = p.stdout.read().decode("utf-8")
+    run_error = p.stderr.read().decode("utf-8")
 
-    result.append(["EXECUTION OUTPUT", output])
-    result.append(["EXECUTION ERROR", error])
+    result.append(["EXECUTION OUTPUT", run_output + "\n" + run_error])
 
     # clean up
     os.remove(filename)

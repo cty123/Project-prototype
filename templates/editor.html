@@ -42,6 +42,9 @@
                     },
                     success: (result) => {
                         let output = $("#output");
+                        $('html, body').animate({
+                            scrollTop: output.offset().top
+                        }, 1500);
                         if (output.html() === "") {
                             output.html(result);
                         } else {
