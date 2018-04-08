@@ -21,9 +21,10 @@
     <div id="body_login" class="o-grid">
         <div class="o-grid__cell">
             <div class="o-grid-text">
-                <h1>Profile for $username</h1>
-                <p>Nickname: $nickname</p>
-                <p>Joined on $joindate</p>
+                <h1>Profile for {{ user.username }}</h1>
+                <p>Nickname: {{ user.nick_name }}</p>
+                <p>Joined on {{ user.date_joined }}</p>
+                <p>Email: {{ user.email }}</p>
                 <p>$filecount files saved</p>
                 <p>Mostly codes in $highestlangcount</p>
             </div>
@@ -31,17 +32,17 @@
         <div class="o-grid__cell">
             <div class="o-grid-text">
                 <h1>Change profile details</h1>
-                <form method="post">
+                <form method="post" action={% url 'profile' %}>
                     {% csrf_token %}
                     <div class="c-input-group c-input-group--stacked">
                         <div class="o-field">
-                            <input type="text" class="c-field" placeholder="Nickname">
+                            <input name="nickname" type="text" class="c-field" placeholder="Nickname">
                         </div>
                         <div class="o-field">
-                            <input type="email" class="c-field" placeholder="email">
+                            <input name="email" type="email" class="c-field" placeholder="email">
                         </div>
                         <div class="o-field">
-                            <input type="password" class="c-field" placeholder="Password">
+                            <input name="password" type="password" class="c-field" placeholder="Password">
                         </div>
                         <div class="o-field">
                             <button style="width: 100%" class="c-button c-button--success" type="submit">Save</button>

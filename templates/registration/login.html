@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-{% load static %}
+{% load staticfiles %}
 <html>
 <head>
     <title>Login or register</title>
@@ -26,15 +26,17 @@
                 <form method="post">
                     {% csrf_token %}
                     <div class="c-input-group c-input-group--stacked">
-                        <div class="o-field">
-                            <input type="text" class="c-field" placeholder="Username">
-                        </div>
-                        <div class="o-field">
-                            <input type="password" class="c-field" placeholder="Password">
-                        </div>
-                        <div class="o-field">
-                            <button style="width: 100%" class="c-button c-button--success" type="submit">Login</button>
-                        </div>
+                        <form action="login.html" method="post">
+                            <div class="o-field">
+                                <input name="username" type="text" class="c-field" placeholder="Username">
+                            </div>
+                            <div class="o-field">
+                                <input name="password" type="password" class="c-field" placeholder="Password">
+                            </div>
+                            <div class="o-field">
+                                <button style="width: 100%" class="c-button c-button--success" type="submit">Login</button>
+                            </div>
+                        </form>
                     </div>
                 </form>
             </div>
