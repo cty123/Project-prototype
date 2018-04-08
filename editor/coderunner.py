@@ -13,11 +13,17 @@ def run_c(code, flags):
     f = open(filename, "w+")
     f.write(code)
     f.close()
-    p = subprocess.Popen(["gcc", "-o", executable, filename], stdout=subprocess.PIPE)
+    p = subprocess.Popen(["gcc", "-o", executable, filename], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     p.wait()
-    p = subprocess.Popen(["./" + executable] + shlex.split(flags, posix=True), stdout=subprocess.PIPE)
+    compile_output = p.stdout.read().decode("utf-8")
+    compile_error = p.stderr.read().decode("utf-8")
+    p = subprocess.Popen(["./" + executable] + shlex.split(flags, posix=True), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     p.wait()
-    result = p.stdout.read().decode("utf-8")
+    run_output = p.stdout.read().decode("utf-8")
+    run_error = p.stderr.read().decode("utf-8")
+
+    result = "COMPILE OUTPUT:\n\n" + compile_output + "\n\nCOMPILE ERROR:\n\n" + compile_error + "\n\n"
+    result += "EXECUTION OUTPUT:\n\n" + run_output + "\n\nEXECUTION ERROR:\n\n" + run_error
 
     # clean up
     os.remove(filename)
@@ -34,9 +40,12 @@ def run_python(code, flags):
     f = open(filename, "w+")
     f.write(code)
     f.close()
-    p = subprocess.Popen(["python", filename] + shlex.split(flags, posix=True), stdout=subprocess.PIPE)
+    p = subprocess.Popen(["python", filename] + shlex.split(flags, posix=True), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     p.wait()
-    result = p.stdout.read().decode("utf-8")
+    output = p.stdout.read().decode("utf-8")
+    error = p.stderr.read().decode("utf-8")
+
+    result = "EXECUTION OUTPUT:\n\n" + output + "\n\nEXECUTION ERROR:\n\n" + error
 
     # clean up
     os.remove(filename)
