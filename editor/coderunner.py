@@ -17,17 +17,19 @@ def run_c(code, flags):
     p.wait()
     compile_output = p.stdout.read().decode("utf-8")
     compile_error = p.stderr.read().decode("utf-8")
-    p = subprocess.Popen(["./" + executable] + shlex.split(flags, posix=True), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    p.wait()
-    run_output = p.stdout.read().decode("utf-8")
-    run_error = p.stderr.read().decode("utf-8")
-
     result = "COMPILE OUTPUT:\n\n" + compile_output + "\n\nCOMPILE ERROR:\n\n" + compile_error + "\n\n"
-    result += "EXECUTION OUTPUT:\n\n" + run_output + "\n\nEXECUTION ERROR:\n\n" + run_error
+
+    if os.path.isfile(executable):
+        p = subprocess.Popen(["./" + executable] + shlex.split(flags, posix=True), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p.wait()
+        run_output = p.stdout.read().decode("utf-8")
+        run_error = p.stderr.read().decode("utf-8")
+        result += "EXECUTION OUTPUT:\n\n" + run_output + "\n\nEXECUTION ERROR:\n\n" + run_error
 
     # clean up
     os.remove(filename)
-    os.remove(executable)
+    if os.path.isfile(executable):
+        os.remove(executable)
 
     return result
 
