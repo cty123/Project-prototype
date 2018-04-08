@@ -6,6 +6,8 @@ import os
 def run_c(code, filename, flags):
     """Runs C code."""
 
+    result = []
+
     if filename:
         executable = filename[:-2]
     else:
@@ -19,14 +21,16 @@ def run_c(code, filename, flags):
     p.wait()
     compile_output = p.stdout.read().decode("utf-8")
     compile_error = p.stderr.read().decode("utf-8")
-    result = "COMPILE OUTPUT:\n\n" + compile_output + "\n\nCOMPILE ERROR:\n\n" + compile_error + "\n\n"
+    result.append(["COMPILE OUTPUT", compile_output])
+    result.append(["COMPILE ERROR", compile_error])
 
     if os.path.isfile(executable):
         p = subprocess.Popen(["./" + executable] + flags, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         p.wait()
         run_output = p.stdout.read().decode("utf-8")
         run_error = p.stderr.read().decode("utf-8")
-        result += "EXECUTION OUTPUT:\n\n" + run_output + "\n\nEXECUTION ERROR:\n\n" + run_error
+        result.append(["EXECUTION OUTPUT", run_output])
+        result.append(["EXECUTION ERROR", run_error])
 
     # clean up
     os.remove(filename)
@@ -38,6 +42,8 @@ def run_c(code, filename, flags):
 
 def run_cpp(code, filename, flags):
     """Runs C++ code."""
+
+    result = []
 
     if filename:
         executable = filename[:-2]
@@ -52,14 +58,16 @@ def run_cpp(code, filename, flags):
     p.wait()
     compile_output = p.stdout.read().decode("utf-8")
     compile_error = p.stderr.read().decode("utf-8")
-    result = "COMPILE OUTPUT:\n\n" + compile_output + "\n\nCOMPILE ERROR:\n\n" + compile_error + "\n\n"
+    result.append(["COMPILE OUTPUT", compile_output])
+    result.append(["COMPILE ERROR", compile_error])
 
     if os.path.isfile(executable):
         p = subprocess.Popen(["./" + executable] + flags, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         p.wait()
         run_output = p.stdout.read().decode("utf-8")
         run_error = p.stderr.read().decode("utf-8")
-        result += "EXECUTION OUTPUT:\n\n" + run_output + "\n\nEXECUTION ERROR:\n\n" + run_error
+        result.append(["EXECUTION OUTPUT", run_output])
+        result.append(["EXECUTION ERROR", run_error])
 
     # clean up
     os.remove(filename)
@@ -72,10 +80,13 @@ def run_cpp(code, filename, flags):
 def run_java(code, filename, flags):
     """Runs Java code."""
 
+    result = []
+
     if filename:
         executable = filename[:-5]
     else:
-        return "ERROR\n\nFilename required"
+        result.append(["ERROR", "Filename required"])
+        return result
 
     f = open(filename, "w+")
     f.write(code)
@@ -84,14 +95,16 @@ def run_java(code, filename, flags):
     p.wait()
     compile_output = p.stdout.read().decode("utf-8")
     compile_error = p.stderr.read().decode("utf-8")
-    result = "COMPILE OUTPUT:\n\n" + compile_output + "\n\nCOMPILE ERROR:\n\n" + compile_error + "\n\n"
+    result.append(["COMPILE OUTPUT", compile_output])
+    result.append(["COMPILE ERROR", compile_error])
 
     if os.path.isfile(executable + ".class"):
         p = subprocess.Popen(["java", executable] + flags, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         p.wait()
         run_output = p.stdout.read().decode("utf-8")
         run_error = p.stderr.read().decode("utf-8")
-        result += "EXECUTION OUTPUT:\n\n" + run_output + "\n\nEXECUTION ERROR:\n\n" + run_error
+        result.append(["EXECUTION OUTPUT", run_output])
+        result.append(["EXECUTION ERROR", run_error])
 
     # clean up
     os.remove(filename)
@@ -104,6 +117,8 @@ def run_java(code, filename, flags):
 def run_python(code, filename, flags):
     """Runs Python code."""
 
+    result = []
+
     if not filename:
         filename = str(uuid.uuid4()) + ".py"
 
@@ -115,7 +130,8 @@ def run_python(code, filename, flags):
     output = p.stdout.read().decode("utf-8")
     error = p.stderr.read().decode("utf-8")
 
-    result = "EXECUTION OUTPUT:\n\n" + output + "\n\nEXECUTION ERROR:\n\n" + error
+    result.append(["EXECUTION OUTPUT", output])
+    result.append(["EXECUTION ERROR", error])
 
     # clean up
     os.remove(filename)

@@ -1,4 +1,5 @@
 from .coderunner import *
+from .formatter import *
 
 import os
 import shlex
@@ -45,7 +46,7 @@ class EditorView(View):
 
         os.chdir(current_dir)
 
-        return HttpResponse(result)
+        return HttpResponse(format(result))
 
 
 class ProfileView(View):

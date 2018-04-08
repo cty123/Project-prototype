@@ -41,7 +41,12 @@
                         "flags": flags
                     },
                     success: (result) => {
-                        $("#output").val(result);
+                        let output = $("#output");
+                        if (output.html() === "") {
+                            output.html(result);
+                        } else {
+                            output.prepend(result + "<br /><hr /><br />");
+                        }
                     }
                 });
             });
@@ -180,10 +185,7 @@
             <input type="button" class="c-button c-button--success" name="editor_run_btn" id="editor_run_btn" value="Run program!" />
         </div>
 
-        <p><label for="output">Program output:</label>
-        <textarea class="c-field" rows="20" cols="200" id="output" name="output">
-
-        </textarea></p>
+        <p id="output" name="output"></p>
 
     </div>
 
