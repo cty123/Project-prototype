@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.forms import forms
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.contrib.auth import authenticate, login, logout
@@ -61,15 +62,17 @@ class RegisterView(View):
             pass_word = request.POST.get("password", "")
             nick_name = request.POST.get("nickname", "")
             email = request.POST.get("email", "")
+
             user_profile = UserProfile()
             user_profile.username = user_name
             user_profile.email = email
             user_profile.password = make_password(pass_word)
             user_profile.nick_name = nick_name
             user_profile.save()
-            return redirect('login')
+            return render(request, 'registration/login.html', {'reg_msg': 'Account created, please login!'})
         else:
-            return render(request, 'registration/login.html', {'reg_msg':'Invalid'})
+            print(register_form.errors)
+            return render(request, 'registration/login.html', {'reg_msg': register_form.errors})
 
 
 

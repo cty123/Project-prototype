@@ -47,7 +47,7 @@
         <div class="o-grid__cell">
             <div class="o-grid-text">
                 <h1>Register</h1>
-                <form method="post" action={% url 'register' %}>
+                <form enctype="multipart/form-data" method="post" action={% url 'register' %}>
                     {% csrf_token %}
                     <div class="c-input-group c-input-group--stacked">
                         <div class="o-field">
