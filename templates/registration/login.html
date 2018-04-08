@@ -23,10 +23,10 @@
         <div class="o-grid__cell">
             <div class="o-grid-text">
                 <h1>Login</h1>
-                <form method="post">
+                <form method="post" action={% url 'login' %}>
                     {% csrf_token %}
                     <div class="c-input-group c-input-group--stacked">
-                        <form action="login.html" method="post">
+                        <form method="post" action={% url 'login' %}>
                             <div class="o-field">
                                 <input name="username" type="text" class="c-field" placeholder="Username">
                             </div>
@@ -36,6 +36,9 @@
                             <div class="o-field">
                                 <button style="width: 100%" class="c-button c-button--success" type="submit">Login</button>
                             </div>
+                            <div class="o-field">
+                                <label>{{ msg }}</label>
+                            </div>
                         </form>
                     </div>
                 </form>
@@ -44,26 +47,29 @@
         <div class="o-grid__cell">
             <div class="o-grid-text">
                 <h1>Register</h1>
-                <form method="post">
+                <form method="post" action={% url 'register' %}>
                     {% csrf_token %}
                     <div class="c-input-group c-input-group--stacked">
                         <div class="o-field">
-                            <input type="text" class="c-field" placeholder="Username">
+                            <input name="username" type="text" class="c-field" placeholder="Username">
                         </div>
                         <div class="o-field">
-                            <input type="text" class="c-field" placeholder="Nickname">
+                            <input name="nickname" type="text" class="c-field" placeholder="Nickname">
                         </div>
                         <div class="o-field">
-                            <input type="password" class="c-field" placeholder="Password">
+                            <input name="password" type="password" class="c-field" placeholder="Password">
                         </div>
                         <div class="o-field">
-                            <input type="password" class="c-field" placeholder="Repeat password">
+                            <input name="password_repeat" type="password" class="c-field" placeholder="Repeat password">
                         </div>
                         <div class="o-field">
-                            <input type="email" class="c-field" placeholder="Email">
+                            <input name="email" type="email" class="c-field" placeholder="Email">
                         </div>
                         <div class="o-field">
                             <button style="width: 100%" class="c-button c-button--success" type="submit">Register</button>
+                        </div>
+                        <div class="o-field">
+                            <label>{{ reg_msg }}</label>
                         </div>
                     </div>
                 </form>

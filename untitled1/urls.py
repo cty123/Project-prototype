@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from editor.views import EditorView, ProfileView, FilesView
-from users.views import LoginView, ProfileView, LogoutView
+from users.views import LoginView, ProfileView, LogoutView, RegisterView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,5 +26,6 @@ urlpatterns = [
     url(r'^logout/$', LogoutView.as_view(), name='logout'),
     url(r'^$', EditorView.as_view(), name='editor'),
     url(r'^profile/$', ProfileView.as_view(), name='profile'),
-    url(r'^files/$', FilesView.as_view(), name='files')
+    url(r'^files/$', FilesView.as_view(), name='files'),
+    url(r'^register', RegisterView.as_view(), name='register')
 ]
