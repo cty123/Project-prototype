@@ -3,12 +3,10 @@ def format(output):
 
     result = ""
     for section in output:
-        result += "<p><h1 class=\"c-heading u-small\">" + section[0] + "</h1><br />"
         if section[1]:
+            result += "<p><h1 class=\"c-heading u-small\">" + section[0] + "</h1><br />"
             result += "<pre class=\"c-code c-code--multiline\">" + section[1] + "</pre>"
-        else:
-            result += "<em>[none]</em>"
-        result += "</p>"
+            result += "</p>"
 
     return result
 
