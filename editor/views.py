@@ -1,6 +1,7 @@
 from .coderunner import *
 
 import os
+import shlex
 
 from django.shortcuts import render
 from django.views.generic import View
@@ -29,6 +30,8 @@ class EditorView(View):
         language = request.POST.get("language")
         filename = request.POST.get("filename")
         flags = request.POST.get("flags")
+
+        flags = shlex.split(flags, posix=True)
 
         result = ""
         if language == "c":

@@ -1,7 +1,6 @@
 import subprocess
 import uuid
 import os
-import shlex
 
 
 def run_c(code, filename, flags):
@@ -23,7 +22,7 @@ def run_c(code, filename, flags):
     result = "COMPILE OUTPUT:\n\n" + compile_output + "\n\nCOMPILE ERROR:\n\n" + compile_error + "\n\n"
 
     if os.path.isfile(executable):
-        p = subprocess.Popen(["./" + executable] + shlex.split(flags, posix=True), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p = subprocess.Popen(["./" + executable] + flags, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         p.wait()
         run_output = p.stdout.read().decode("utf-8")
         run_error = p.stderr.read().decode("utf-8")
@@ -56,7 +55,7 @@ def run_cpp(code, filename, flags):
     result = "COMPILE OUTPUT:\n\n" + compile_output + "\n\nCOMPILE ERROR:\n\n" + compile_error + "\n\n"
 
     if os.path.isfile(executable):
-        p = subprocess.Popen(["./" + executable] + shlex.split(flags, posix=True), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p = subprocess.Popen(["./" + executable] + flags, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         p.wait()
         run_output = p.stdout.read().decode("utf-8")
         run_error = p.stderr.read().decode("utf-8")
@@ -88,7 +87,7 @@ def run_java(code, filename, flags):
     result = "COMPILE OUTPUT:\n\n" + compile_output + "\n\nCOMPILE ERROR:\n\n" + compile_error + "\n\n"
 
     if os.path.isfile(executable + ".class"):
-        p = subprocess.Popen(["java", executable] + shlex.split(flags, posix=True), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p = subprocess.Popen(["java", executable] + flags, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         p.wait()
         run_output = p.stdout.read().decode("utf-8")
         run_error = p.stderr.read().decode("utf-8")
@@ -111,7 +110,7 @@ def run_python(code, filename, flags):
     f = open(filename, "w+")
     f.write(code)
     f.close()
-    p = subprocess.Popen(["python", filename] + shlex.split(flags, posix=True), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    p = subprocess.Popen(["python", filename] + flags, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     p.wait()
     output = p.stdout.read().decode("utf-8")
     error = p.stderr.read().decode("utf-8")
