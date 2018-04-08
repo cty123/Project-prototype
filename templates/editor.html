@@ -28,11 +28,15 @@
             // Handler: run the code
             $("#editor_run_btn").click(() => {
                 let text = editor.getValue();
+                let language = $("#editor_control_language").val();
+                let flags = $("#editor_run_args").val();
                 $.ajax({
                     type: "POST",
                     url: "{% url 'editor' %}",
                     data: {
-                        "text": text
+                        "text": text,
+                        "language": language,
+                        "flags": flags
                     },
                     success: (result) => {
                         $("#output").val(result);

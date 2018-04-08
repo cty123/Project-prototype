@@ -1,4 +1,4 @@
-import subprocess
+from .coderunner import *
 
 from django.shortcuts import render
 from django.views.generic import View
@@ -20,14 +20,11 @@ class EditorView(View):
         language = request.POST.get("language")
         flags = request.POST.get("flags")
 
-        f = open("test.c", "w+")
-        f.write(code)
-        f.close()
-        p = subprocess.Popen(["gcc","-o", "test", "test.c"], stdout=subprocess.PIPE)
-        p.wait()
-        p = subprocess.Popen(["./test"], stdout=subprocess.PIPE)
-        p.wait()
-        result = p.stdout.read().decode("utf-8")
+        if language == "c":
+            result = run_c(code, flags)
+        elif language == "python":
+            result = run_python(code, flags)
+
         return HttpResponse(result)
 
 
