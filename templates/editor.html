@@ -40,6 +40,26 @@
                 });
             });
 
+            // Handler: change language
+            $("#editor_control_language").change((event) => {
+                let language = $(event.target).val();
+                let ace_language;
+                switch (language) {
+                    case "c":
+                    case "cpp":
+                        ace_language = "c_cpp";
+                        break;
+                    case "java":
+                        ace_language = "java";
+                        break;
+                    case "python":
+                        ace_language = "python";
+                        break;
+                }
+                editor.session.setMode("ace/mode/" + ace_language);
+                storage.set_values({language: ace_language});
+            });
+
             // Handler: change font size
             $("#editor_control_size").change((event) => {
                 try {
@@ -142,7 +162,7 @@
             <button class="c-button c-button--error" style="padding: 15px">Load</button>
             <button class="c-button c-button--success" style="padding: 15px">Save</button>
         </div>
-        <div id="editor">//write your code here!</div>
+        <div id="editor">// write your code here!</div>
 
         <div id="editor_run" class="c-input-group">
             <input type="button" class="c-button c-button--success" name="editor_run_btn" id="editor_run_btn" value="Run program!" />
