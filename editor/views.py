@@ -33,6 +33,10 @@ class EditorView(View):
         result = ""
         if language == "c":
             result = run_c(code, filename, flags)
+        elif language == "cpp":
+            result = run_cpp(code, filename, flags)
+        elif language == "java":
+            result = run_java(code, filename, flags)
         elif language == "python":
             result = run_python(code, filename, flags)
 
