@@ -29,6 +29,7 @@
             $("#editor_run_btn").click(() => {
                 let text = editor.getValue();
                 let language = $("#editor_control_language").val();
+                let filename = $("#editor_run_filename").val();
                 let flags = $("#editor_run_args").val();
                 $.ajax({
                     type: "POST",
@@ -36,6 +37,7 @@
                     data: {
                         "text": text,
                         "language": language,
+                        "filename": filename,
                         "flags": flags
                     },
                     success: (result) => {
@@ -169,10 +171,13 @@
         <div id="editor">// write your code here!</div>
 
         <div id="editor_run" class="c-input-group">
-            <input type="button" class="c-button c-button--success" name="editor_run_btn" id="editor_run_btn" value="Run program!" />
+            <div class="o-field">
+                <input type="text" class="c-field" placeholder="(optional) filename" name="editor_run_filename" id="editor_run_filename"/>
+            </div>
             <div class="o-field">
                 <input type="text" class="c-field" placeholder="(optional) command line arguments" name="editor_run_args" id="editor_run_args"/>
             </div>
+            <input type="button" class="c-button c-button--success" name="editor_run_btn" id="editor_run_btn" value="Run program!" />
         </div>
 
         <p><label for="output">Program output:</label>

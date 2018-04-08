@@ -4,11 +4,14 @@ import os
 import shlex
 
 
-def run_c(code, flags):
+def run_c(code, filename, flags):
     """Runs C code."""
 
-    executable = str(uuid.uuid4())
-    filename = executable + ".c"
+    if filename:
+        executable = filename[:-2]
+    else:
+        executable = str(uuid.uuid4())
+        filename = executable + ".c"
 
     f = open(filename, "w+")
     f.write(code)
@@ -34,10 +37,11 @@ def run_c(code, flags):
     return result
 
 
-def run_python(code, flags):
+def run_python(code, filename, flags):
     """Runs Python code."""
 
-    filename = str(uuid.uuid4()) + ".py"
+    if not filename:
+        filename = str(uuid.uuid4()) + ".py"
 
     f = open(filename, "w+")
     f.write(code)

@@ -7,8 +7,10 @@ from django.views.generic import View
 
 
 class LoginView(View):
+
     def get(self, request):
         return render(request, "registration/login.html", {})
+
     def post(self, request):
         user_name = request.POST.get("username", "")
         pass_word = request.POST.get("password", "")
@@ -19,7 +21,9 @@ class LoginView(View):
         else:
             return render(request, "registration/login.html", {"msg": "Invalid username or password"})
 
+
 class ProfileView(View):
+
     @method_decorator(login_required(login_url='login'))
     def get(self, request):
         user = request.user
