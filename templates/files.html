@@ -23,13 +23,22 @@
     </ul>
 
     <div id="body_login">
-        <h1>Your files</h1>
+        <h1>Your Repositories</h1>
+        {% for repo in repos %}
+            <h2>{{ repo.name }}</h2>
+        {% endfor %}
+
         <p>stuff goes here</p>
         <h1>Files shared with you</h1>
         <p>more stuff</p>
+
+        <form method="post" action={% url 'files' %}>
+            {% csrf_token %}
+            <input name="repo_name" type="text">
+            <input type="submit" title="Create">
+        </form>
     </div>
 
-    {% csrf_token %}
     <script type="text/javascript">
         // using jQuery
         csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
