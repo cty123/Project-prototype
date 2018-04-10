@@ -8,6 +8,13 @@
     <link rel="stylesheet" href="{% static "css/editor.css" %}" />
 
     <script src="{% static "jquery/jquery-3.3.1.min.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+        $(document).ready(() => {
+            if (!"{{ reg_msg }}") {
+                $("#login_success_label").hide()
+            }
+        });
+    </script>
 </head>
 <body>
 
@@ -26,20 +33,18 @@
                 <form method="post" action={% url 'login' %}>
                     {% csrf_token %}
                     <div class="c-input-group c-input-group--stacked">
-                        <form method="post" action={% url 'login' %}>
-                            <div class="o-field">
-                                <input name="username" type="text" class="c-field" placeholder="Username">
-                            </div>
-                            <div class="o-field">
-                                <input name="password" type="password" class="c-field" placeholder="Password">
-                            </div>
-                            <div class="o-field">
-                                <button style="width: 100%" class="c-button c-button--success" type="submit">Login</button>
-                            </div>
-                            <div class="o-field">
-                                <label>{{ msg }}</label>
-                            </div>
-                        </form>
+                        <div class="o-field">
+                            <input name="username" type="text" class="c-field" placeholder="Username">
+                        </div>
+                        <div class="o-field">
+                            <input name="password" type="password" class="c-field" placeholder="Password">
+                        </div>
+                        <div class="o-field">
+                            <button style="width: 100%" class="c-button c-button--success" type="submit">Login</button>
+                        </div>
+                        <div class="o-field">
+                            <label>{{ msg }}</label>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -68,11 +73,11 @@
                         <div class="o-field">
                             <button style="width: 100%" class="c-button c-button--success" type="submit">Register</button>
                         </div>
-                        <div class="o-field">
-                            <label>{{ reg_msg }}</label>
-                        </div>
                     </div>
                 </form>
+                <div class="c-alert c-alert--success" style="margin-top: 20px" id="login_success_label">
+                    {{ reg_msg }}
+                </div>
             </div>
         </div>
     </div>

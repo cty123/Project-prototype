@@ -16,6 +16,11 @@ body {
     right: 300px;
 }
 
+#body_login_alert {
+    left: 300px;
+    right: 300px;
+}
+
 #editor_controls {
     padding-top: 20px;
     padding-bottom: 5px;
