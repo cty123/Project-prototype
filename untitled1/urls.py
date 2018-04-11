@@ -16,13 +16,16 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path
-from django.contrib.auth import views as auth_views
-from editor.views import EditorView, ProfileView, FilesView
+from django.views.generic.base import RedirectView
+from editor.views import EditorView
 from users.views import LoginView, ProfileView, LogoutView, RegisterView
 from repository.views import RepositoryView
 
+favicon_view = RedirectView.as_view(url='/static/favicon.ico', permanent=True)
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    url(r'^favicon\.ico$', favicon_view),
     url(r'^login/$', LoginView.as_view(), name='login'),
     url(r'^logout/$', LogoutView.as_view(), name='logout'),
     url(r'^$', EditorView.as_view(), name='editor'),

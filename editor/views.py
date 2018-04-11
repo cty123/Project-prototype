@@ -52,19 +52,3 @@ class EditorView(View):
         os.chdir(current_dir)
 
         return HttpResponse(format(result))
-
-
-class ProfileView(View):
-
-    def get(self, request):
-        """Shows the user profile."""
-
-        return render(request, "profile.html", {})
-
-
-class FilesView(View):
-
-    def get(self, request):
-        """Shows the user's files."""
-
-        return render(request, "files.html", {})
