@@ -107,6 +107,66 @@
                 storage.set_values({controls: controls});
             });
 
+            // Handler: get the file list
+            $("#editor_control_load").click((event) => {
+                let load_dialog = $("#file_open_display");
+                load_dialog.removeClass("u-display-none");
+
+                $.ajax({
+                    type: "GET",
+                    url: "{% url 'repo_files' %}",
+                    data: {
+                        "mode": "list",
+                        "path": "{{ path }}"
+                    },
+                    success: (result) => {
+                        $("#file_open_display_list").html(result);
+
+                        bind_open_event();
+                    }
+                });
+            });
+
+            // Handler: show the save dialog
+            $("#editor_control_save").click((event) => {
+                let save_dialog = $("#file_save_display");
+                save_dialog.removeClass("u-display-none");
+                let save_message = $("#file_save_success_label");
+                save_message.hide();
+            });
+
+            // Handler: save the file
+            $("#file_save_button").click((event) => {
+                let save_message = $("#file_save_success_label");
+
+                let text = editor.getValue();
+                let filename = $("#file_save_name").val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'repo_files' %}",
+                    data: {
+                        "path": "{{ path }}",
+                        "filename": filename,
+                        "text": text
+                    },
+                    success: (result) => {
+                        save_message.show();
+                        save_message.text(result);
+                    }
+                });
+            });
+
+            // Handler: open dialog close button
+            $("#file_open_display_close").click((event) => {
+                $("#file_open_display").addClass("u-display-none");
+            });
+
+            // Handler: save dialog close button
+            $("#file_save_display_close").click((event) => {
+                $("#file_save_display").addClass("u-display-none");
+            });
+
             let csrfSafeMethod = (method) =>{
                 // these HTTP methods do not require CSRF protection
                 return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
@@ -119,6 +179,27 @@
                 }
             });
         });
+
+        let bind_open_event = () => {
+            $(".file_open_item").click((event) => {
+                let load_dialog = $("#file_open_display");
+                load_dialog.addClass("u-display-none");
+                let filename = $(event.target).text();
+
+                $.ajax({
+                    type: "GET",
+                    url: "{% url 'repo_files' %}",
+                    data: {
+                        "mode": "file",
+                        "path": "{{ path }}",
+                        "filename": filename
+                    },
+                    success: (result) => {
+                        editor.setValue(result, 1);
+                    }
+                });
+            });
+        }
     </script>
 </head>
 <body>
@@ -221,9 +302,9 @@
                     </select>
                 </label>
             </div>
-            <button class="c-button c-button--info" style="padding: 15px">Share</button>
-            <button class="c-button c-button--error" style="padding: 15px">Load</button>
-            <button class="c-button c-button--success" style="padding: 15px">Save</button>
+            <button id="editor_control_share" class="c-button c-button--info" style="padding: 15px">Share</button>
+            <button id="editor_control_load" class="c-button c-button--error" style="padding: 15px">Load</button>
+            <button id="editor_control_save" class="c-button c-button--success" style="padding: 15px">Save</button>
         </div>
         <div id="editor"></div>
 
@@ -242,33 +323,39 @@
     </div>
 
     <!-- file open dialog -->
-    <div class="u-display-none c-overlay c-overlay--visible"></div>
-    <div class="o-modal">
-        <div class="c-card">
-            <header class="c-card__header">
-                <button type="button" class="c-button c-button--close">&times;</button>
-                <h2 class="c-heading">Open file</h2>
-            </header>
-            <div class="c-card__body">
-                stuff goes here
+    <div id="file_open_display" class="u-display-none">
+        <div class="c-overlay c-overlay--visible"></div>
+        <div class="o-modal">
+            <div class="c-card">
+                <header class="c-card__header">
+                    <button id="file_open_display_close" type="button" class="c-button c-button--close">&times;</button>
+                    <h2 class="c-heading">Open file</h2>
+                </header>
+                <div id="file_open_display_list" class="c-card__body">
+                    stuff goes here
+                </div>
             </div>
         </div>
     </div>
 
     <!-- file save dialog -->
-    <div class="u-display-none c-overlay c-overlay--visible"></div>
-    <div class="o-modal">
-        <div class="c-card">
-            <header class="c-card__header">
-                <button type="button" class="c-button c-button--close">&times;</button>
-                <h2 class="c-heading">Save file</h2>
-            </header>
-            <div class="c-card__body">
-                <div class="c-input-group">
-                    <div class="o-field">
-                        <input class="c-field" placeholder="File name">
+    <div id="file_save_display" class="u-display-none">
+        <div class="c-overlay c-overlay--visible"></div>
+        <div class="o-modal">
+            <div class="c-card">
+                <header class="c-card__header">
+                    <button id="file_save_display_close" type="button" class="c-button c-button--close">&times;</button>
+                    <h2 class="c-heading">Save file</h2>
+                </header>
+                <div class="c-card__body">
+                    <div class="c-input-group">
+                        <div class="o-field">
+                            <input id="file_save_name" class="c-field" placeholder="File name">
+                        </div>
+                        <button id="file_save_button" class="c-button c-button--success">Save file</button>
                     </div>
-                    <button class="c-button c-button--success">Save file</button>
+                    <div class="c-alert c-alert--success" style="margin-top: 20px" id="file_save_success_label">
+                    </div>
                 </div>
             </div>
         </div>

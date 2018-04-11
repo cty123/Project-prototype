@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views.generic import View
-from django.http import JsonResponse, HttpResponse
+from django.http import HttpResponse
 from repository.models import Repository
 
 import re
@@ -42,26 +42,22 @@ class RepositoryFileView(View):
         mode = request.GET.get("mode", "")
 
         if mode == "list":
-            files = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f)) and os.access(os.path.join(path, f), os.X_OK)]
+            files = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f)) and not os.access(os.path.join(path, f), os.X_OK)]
             files.sort()
 
-            return JsonResponse(files, safe=False)
+            formatted_files = "<ul>"
+            for file in files:
+                formatted_files += "<li><a class=\"c-link file_open_item\">" + file + "</a></li>"
+            formatted_files += "</ul>"
+
+            return HttpResponse(formatted_files)
 
         else:
             filename = request.GET.get("filename", "")
 
-            current_dir = os.path.dirname(os.path.realpath(__file__))
-
-            if not os.path.isdir(path):
-                os.makedirs(path)
-
-            os.chdir(path)
-
-            f = open(filename, "r")
+            f = open(os.path.join(path, filename), "r")
             text = f.read()
             f.close()
-
-            os.chdir(current_dir)
 
             return HttpResponse(text)
 
@@ -73,17 +69,8 @@ class RepositoryFileView(View):
         filename = request.POST.get("filename", "")
         text = request.POST.get("text")
 
-        current_dir = os.path.dirname(os.path.realpath(__file__))
-
-        if not os.path.isdir(path):
-            os.makedirs(path)
-
-        os.chdir(path)
-
-        f = open(filename, "w")
+        f = open(os.path.join(path, filename), "w")
         f.write(text)
         f.close()
-
-        os.chdir(current_dir)
 
         return HttpResponse("File saved")
