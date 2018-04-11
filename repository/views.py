@@ -24,14 +24,20 @@ class RepositoryView(View):
 
         # sanitize the repo name
         repo_name = repo_name.replace(" ", "_")
-        repo_name = "".join([c for c in repo_name if re.match(r'\w', c)])
 
-        repo = Repository(name=repo_name, user=repo_owner)
-        repo.set_path()
-        repo.save()
-        print('repo path is' + repo.repo_path)
-        return self.get(request=request)
-
+        # Check if a repository with same already exists
+        if not Repository.objects.filter(name=repo_name, user=repo_owner).exists():
+            repo_name = "".join([c for c in repo_name if re.match(r'\w', c)])
+            repo = Repository(name=repo_name, user=repo_owner)
+            repo.set_path()
+            repo.save()
+            print('repo path is' + repo.repo_path)
+            return self.get(request=request)
+        else:
+            user = request.user
+            repos = Repository.objects.filter(user=user)
+            repos = repos.extra(order_by=["name"])
+            return render(request, 'files.html', {'repos': repos, 'err_msg': 'Repository' + repo_name+' already exists'})
 
 class RepositoryFileView(View):
     @method_decorator(login_required(login_url='login'))
