@@ -2,7 +2,7 @@
 {% load static %}
 <html lang="en">
 <head>
-    <title>Editor</title>
+    <title>Editor - Prototype Editor</title>
     <link rel="stylesheet" href="https://unpkg.com/blaze@4.0.0-6/scss/dist/blaze.min.css" />
     <link rel="stylesheet" href="{% static "css/editor.css" %}" />
 
@@ -140,7 +140,7 @@
             <div class="c-card__item c-card__item--success o-media">
                 <div class="o-media__body">
                     <h2 class="c-heading">Welcome to the code editor</h2>
-                    <p class="c-paragraph">Some intro text would go here</p>
+                    <p class="c-paragraph">DEBUG INFO: Currently editing {{ path }}</p>
                 </div>
             </div>
         </div>
@@ -224,7 +224,7 @@
             <button class="c-button c-button--error" style="padding: 15px">Load</button>
             <button class="c-button c-button--success" style="padding: 15px">Save</button>
         </div>
-        <div id="editor">// write your code here!</div>
+        <div id="editor"></div>
 
         <div id="editor_run" class="c-input-group">
             <div class="o-field">
@@ -239,6 +239,39 @@
         <p id="output" name="output"></p>
 
     </div>
+
+    <!-- file open dialog --> <!--
+    <div class="c-overlay c-overlay--visible"></div>
+    <div class="o-modal">
+        <div class="c-card">
+            <header class="c-card__header">
+                <button type="button" class="c-button c-button--close">&times;</button>
+                <h2 class="c-heading">Open file</h2>
+            </header>
+            <div class="c-card__body">
+                stuff goes here
+            </div>
+        </div>
+    </div> -->
+
+    <!-- file save dialog --> <!--
+    <div class="c-overlay c-overlay--visible"></div>
+    <div class="o-modal">
+        <div class="c-card">
+            <header class="c-card__header">
+                <button type="button" class="c-button c-button--close">&times;</button>
+                <h2 class="c-heading">Save file</h2>
+            </header>
+            <div class="c-card__body">
+                <div class="c-input-group">
+                    <div class="o-field">
+                        <input class="c-field" placeholder="File name">
+                    </div>
+                    <button class="c-button c-button--success">Save file</button>
+                </div>
+            </div>
+        </div>
+    </div> -->
 
     {% csrf_token %}
     <script type="text/javascript">

@@ -2,7 +2,7 @@
 {% load static %}
 <html lang="en">
 <head>
-    <title>Files</title>
+    <title>Files - Prototype Editor</title>
     <link rel="stylesheet" href="https://unpkg.com/blaze@4.0.0-6/scss/dist/blaze.min.css" />
     <link rel="stylesheet" href="{% static "css/editor.css" %}" />
 
@@ -35,7 +35,9 @@
         {% endif %}
 
         <h1>Create a repository</h1>
-        <p>Put a short description of what repositories are and what they do here.</p>
+        <p>Repositories help you keep your files organized and collected. You can create a new repository for each project,
+           or however else you see fit to organize your code.
+           Share your repository with other users to allow them to edit the files they contain as well.</p>
         <form method="post" action={% url 'files' %}>
             {% csrf_token %}
             <div class="c-input-group">
@@ -48,7 +50,15 @@
 
 
         <h1>Files shared with you</h1>
-        <p>more stuff</p>
+        {% if shared_repos %}
+            <ul>
+                {% for shared_repo in shared_repos %}
+                    <li><a class="c-link" href={% url 'e' shared_repo.name %}>{{ shared_repo.name }}</a></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Repositories that other users have shared with you will appear here.</p>
+        {% endif %}
     </div>
 
     <script type="text/javascript">

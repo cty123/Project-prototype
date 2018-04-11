@@ -14,13 +14,13 @@ class EditorView(View):
     def get(self, request, repo_name):
         """Shows the editor."""
         user = request.user
-        repo_path = 'repo_'+ user.username + '_' + repo_name
+        repo_path = "workspaces/repo_" + user.username + "_" + repo_name + "/"
+
         # Check if the repo_path exists
+        if not os.path.isdir(repo_path):
+            os.makedirs(repo_path)
 
-        # Check if the there is file inside repo_path/
-
-        # If file exists, read the file and pass the content of the file back
-        return render(request, "editor.html", {})
+        return render(request, "editor.html", {"path": repo_path})
 
     def post(self, request):
         """Runs the user-entered code."""
