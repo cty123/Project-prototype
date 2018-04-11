@@ -37,7 +37,7 @@ class ProfileView(View):
     @method_decorator(login_required(login_url='login'))
     def post(self, request):
         nick_name = request.POST.get("nickname", "")
-        user = reqeditor/testing/uest.user
+        user = request.user
         user.nick_name = nick_name
         user.save()
         return render(request, 'profile.html', {})

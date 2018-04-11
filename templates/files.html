@@ -27,7 +27,7 @@
         {% if repos %}
             <ul>
                 {% for repo in repos %}
-                    <li><a class="c-link" href={% url 'e' repo.name %}>{{ repo.name }}</a></li>
+                    <li><a class="c-link" href="{% url 'e' repo.name %}">{{ repo.name }}</a></li>
                 {% endfor %}
             </ul>
         {% else %}

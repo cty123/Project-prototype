@@ -3,7 +3,8 @@ from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views.generic import View
 from repository.models import Repository
-# Create your views here.
+
+import re
 
 
 class RepositoryView(View):
@@ -17,6 +18,11 @@ class RepositoryView(View):
     def post(self, request):
         repo_owner = request.user
         repo_name = request.POST.get("repo_name", "")
+
+        # sanitize the repo name
+        repo_name = repo_name.replace(" ", "_")
+        repo_name = "".join([c for c in repo_name if re.match(r'\w', c)])
+
         repo = Repository(name=repo_name, user=repo_owner)
         repo.set_path()
         repo.save()
