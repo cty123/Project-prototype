@@ -26,6 +26,7 @@
     <div id="body_login">
         <h1>Your repositories</h1>
         {% if repos %}
+            <p>Select a repository to start coding.</p>
             <ul>
                 {% for repo in repos %}
                     <li><a class="c-link" href="{% url 'e' repo.name %}">{{ repo.name }}</a></li>
@@ -50,7 +51,7 @@
         </form>
 
 
-        <h1>Files shared with you</h1>
+        <h1>Repositories shared with you</h1>
         {% if shared_repos %}
             <ul>
                 {% for shared_repo in shared_repos %}
