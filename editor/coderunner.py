@@ -17,18 +17,19 @@ def run_c(code, filename, flags):
     f = open(filename, "w+")
     f.write(code)
     f.close()
-    p = subprocess.Popen(["gcc", "-o", executable, filename], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    p.wait()
-    compile_output = p.stdout.read().decode("utf-8")
-    compile_error = p.stderr.read().decode("utf-8")
-    result.append(["COMPILER OUTPUT", compile_output + "\n" + compile_error])
+
+    try:
+        compile_output = subprocess.check_output(["gcc", "-o", executable, filename], stderr=subprocess.STDOUT, timeout=5)
+        result.append(["COMPILER OUTPUT", compile_output])
+    except subprocess.TimeoutExpired:
+        result.append(["ERROR", "Timeout after 5 seconds"])
 
     if os.path.isfile(executable):
-        p = subprocess.Popen(["./" + executable] + flags, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        p.wait()
-        run_output = p.stdout.read().decode("utf-8")
-        run_error = p.stderr.read().decode("utf-8")
-        result.append(["EXECUTION OUTPUT", run_output + "\n" + run_error])
+        try:
+            run_output = subprocess.check_output(["./" + executable] + flags, stderr=subprocess.STDOUT, timeout=5)
+            result.append(["EXECUTION OUTPUT", run_output])
+        except subprocess.TimeoutExpired:
+            result.append(["ERROR", "Timeout after 5 seconds"])
 
     # clean up
     os.remove(filename)
@@ -52,18 +53,19 @@ def run_cpp(code, filename, flags):
     f = open(filename, "w+")
     f.write(code)
     f.close()
-    p = subprocess.Popen(["g++", "-o", executable, filename], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    p.wait()
-    compile_output = p.stdout.read().decode("utf-8")
-    compile_error = p.stderr.read().decode("utf-8")
-    result.append(["COMPILER OUTPUT", compile_output + "\n" + compile_error])
+
+    try:
+        compile_output = subprocess.check_output(["g++", "-o", executable, filename], stderr=subprocess.STDOUT, timeout=5)
+        result.append(["COMPILER OUTPUT", compile_output])
+    except subprocess.TimeoutExpired:
+        result.append(["ERROR", "Timeout after 5 seconds"])
 
     if os.path.isfile(executable):
-        p = subprocess.Popen(["./" + executable] + flags, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        p.wait()
-        run_output = p.stdout.read().decode("utf-8")
-        run_error = p.stderr.read().decode("utf-8")
-        result.append(["EXECUTION OUTPUT", run_output + "\n" + run_error])
+        try:
+            run_output = subprocess.check_output(["./" + executable] + flags, stderr=subprocess.STDOUT, timeout=5)
+            result.append(["EXECUTION OUTPUT", run_output])
+        except subprocess.TimeoutExpired:
+            result.append(["ERROR", "Timeout after 5 seconds"])
 
     # clean up
     os.remove(filename)
@@ -87,17 +89,19 @@ def run_java(code, filename, flags):
     f = open(filename, "w+")
     f.write(code)
     f.close()
-    p = subprocess.Popen(["javac", filename], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    p.wait()
-    compile_output = p.stdout.read().decode("utf-8")
-    compile_error = p.stderr.read().decode("utf-8")
-    result.append(["COMPILER OUTPUT", compile_output + "\n" + compile_error])
+
+    try:
+        compile_output = subprocess.check_output(["javac", filename], stderr=subprocess.STDOUT, timeout=5)
+        result.append(["COMPILER OUTPUT", compile_output])
+    except subprocess.TimeoutExpired:
+        result.append(["ERROR", "Timeout after 5 seconds"])
+
     if os.path.isfile(executable + ".class"):
-        p = subprocess.Popen(["java", executable] + flags, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        p.wait()
-        run_output = p.stdout.read().decode("utf-8")
-        run_error = p.stderr.read().decode("utf-8")
-        result.append(["EXECUTION OUTPUT", run_output + "\n" + run_error])
+        try:
+            run_output = subprocess.check_output(["java", executable] + flags, stderr=subprocess.STDOUT, timeout=5)
+            result.append(["EXECUTION OUTPUT", run_output])
+        except subprocess.TimeoutExpired:
+            result.append(["ERROR", "Timeout after 5 seconds"])
 
     # clean up
     os.remove(filename)
@@ -118,12 +122,12 @@ def run_python(code, filename, flags):
     f = open(filename, "w+")
     f.write(code)
     f.close()
-    p = subprocess.Popen(["python", filename] + flags, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    p.wait()
-    run_output = p.stdout.read().decode("utf-8")
-    run_error = p.stderr.read().decode("utf-8")
 
-    result.append(["EXECUTION OUTPUT", run_output + "\n" + run_error])
+    try:
+        compile_output = subprocess.check_output(["python", filename] + flags, timeout=5)
+        result.append(["EXECUTION OUTPUT", compile_output])
+    except subprocess.TimeoutExpired:
+        result.append(["ERROR", "Timeout after 5 seconds"])
 
     # clean up
     os.remove(filename)

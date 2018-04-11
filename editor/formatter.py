@@ -5,7 +5,7 @@ def format(output):
     for section in output:
         if section[1] and section[1].strip() != "":
             result += "<p><h1 class=\"c-heading u-small\">" + str(format.counter) + ") " + section[0] + "</h1><br />"
-            result += "<pre class=\"c-code c-code--multiline\">" + section[1].strip() + "</pre>"
+            result += "<pre class=\"c-code c-code--multiline\">" + section[1].decode("utf-8").strip() + "</pre>"
             result += "</p>"
 
     format.counter += 1
