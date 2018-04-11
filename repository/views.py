@@ -12,6 +12,7 @@ class RepositoryView(View):
     def get(self, request):
         user = request.user
         repos = Repository.objects.filter(user=user)
+        repos = repos.extra(order_by=["name"])
         return render(request, 'files.html', {'repos': repos})
 
     @method_decorator(login_required(login_url='login'))
