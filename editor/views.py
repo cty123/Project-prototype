@@ -33,10 +33,10 @@ class EditorView(View):
 
         current_dir = os.path.dirname(os.path.realpath(__file__))
 
-        if not os.path.isdir("workspace/" + str(request.user)):
-            os.makedirs("workspace/" + str(request.user))
+        if not os.path.isdir("execution_workspace/" + str(request.user)):
+            os.makedirs("execution_workspace/" + str(request.user))
 
-        os.chdir("workspace/" + str(request.user))
+        os.chdir("execution_workspace/" + str(request.user))
 
         code = request.POST.get("text")
         language = request.POST.get("language")
