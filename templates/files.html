@@ -25,7 +25,7 @@
     <div id="body_login">
         <h1>Your Repositories</h1>
         {% for repo in repos %}
-            <h2>{{ repo.name }}</h2>
+            <a href={% url 'e' repo.name %}><h2>{{ repo.name }}</h2></a>
         {% endfor %}
 
         <p>stuff goes here</p>

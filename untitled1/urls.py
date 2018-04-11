@@ -28,5 +28,6 @@ urlpatterns = [
     url(r'^$', EditorView.as_view(), name='editor'),
     url(r'^profile/$', ProfileView.as_view(), name='profile'),
     url(r'^files/$', RepositoryView.as_view(), name='files'),
-    url(r'^register', RegisterView.as_view(), name='register')
+    url(r'^register', RegisterView.as_view(), name='register'),
+    url(r'^editor/(?P<repo_name>\w{0,50})/$', EditorView.as_view(), name='e'),
 ]

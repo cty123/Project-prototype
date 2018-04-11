@@ -11,10 +11,15 @@ from django.http import HttpResponse
 
 # Create your views here.
 class EditorView(View):
-
-    def get(self, request):
+    def get(self, request, repo_name):
         """Shows the editor."""
+        user = request.user
+        repo_path = 'repo_'+ user.username + '_' + repo_name
+        # Check if the repo_path exists
 
+        # Check if the there is file inside repo_path/
+
+        # If file exists, read the file and pass the content of the file back
         return render(request, "editor.html", {})
 
     def post(self, request):
