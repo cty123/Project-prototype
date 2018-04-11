@@ -36,7 +36,7 @@
         <div class="o-grid__cell">
             <div class="o-grid-text">
                 <h1>Change profile details</h1>
-                <form method="post" action={% url 'profile' %}>
+                <form method="post" action="{% url 'profile' %}" autocomplete="off">
                     {% csrf_token %}
                     <div class="c-input-group c-input-group--stacked">
                         <div class="o-field">
