@@ -17,7 +17,7 @@ from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path
 from django.views.generic.base import RedirectView
-from editor.views import EditorView
+from editor.views import EditorView, IndexView
 from users.views import LoginView, ProfileView, LogoutView, RegisterView
 from repository.views import RepositoryView
 
@@ -28,7 +28,8 @@ urlpatterns = [
     url(r'^favicon\.ico$', favicon_view),
     url(r'^login/$', LoginView.as_view(), name='login'),
     url(r'^logout/$', LogoutView.as_view(), name='logout'),
-    url(r'^$', EditorView.as_view(), name='editor'),
+    url(r'^$', IndexView.as_view(), name='index'),
+    url(r'^editor$', EditorView.as_view(), name='editor'),
     url(r'^profile/$', ProfileView.as_view(), name='profile'),
     url(r'^files/$', RepositoryView.as_view(), name='files'),
     url(r'^register', RegisterView.as_view(), name='register'),

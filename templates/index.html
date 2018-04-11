@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <title>Prototype Editor</title>
+    <link rel="shortcut icon" href="{%  static 'favicon.ico' %}" />
+    <link rel="stylesheet" href="https://unpkg.com/blaze@4.0.0-6/scss/dist/blaze.min.css" />
+    <link rel="stylesheet" href="{% static "css/editor.css" %}" />
+
+    <script src="{% static "jquery/jquery-3.3.1.min.js" %}" type="text/javascript" charset="utf-8"></script>
+    <style type="text/css">
+        #intro_box {
+            align-items: center;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <div id="intro_box">
+        <img src="{% static 'logo.png' %}" />
+        <p>Prototype Editor is an online text editor with code compilation and execution.<br />Work on your own projects
+           or share code and collaborate with friends.</p>
+        <p><a href="{% url 'profile' %}"><button class="c-button c-button--success">Get started</button></a></p>
+    </div>
+</body>
+</html>
