@@ -268,8 +268,11 @@
         <div class="c-card">
             <div class="c-card__item c-card__item--success o-media">
                 <div class="o-media__body">
-                    <h2 class="c-heading">Welcome to the code editor</h2>
-                    <p class="c-paragraph">DEBUG INFO: Currently editing {{ path }}</p>
+                    {% if user.username == owner_username %}
+                        <p class="c-paragraph">Currently editing the repository "{{ repo_name }}", owned by you.</p>
+                    {% else %}
+                        <p class="c-paragraph">Currently editing the repository "{{ repo_name}}", owned by {{ owner_nickname }} ({{ owner_username }}).</p>
+                    {% endif %}
                 </div>
             </div>
         </div>

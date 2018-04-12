@@ -20,22 +20,22 @@ class RepositorySharingView(View):
 
         # Check if the operator is the owner
         if not owner_username == user.username:
-            return HttpResponse("Sharing failed, you need to be the owner of the repository in order to share")
+            return HttpResponse("You must be the owner of a repository to share it with another user!")
 
         try:
             repo = Repository.objects.get(name=repo_name, user=user)
             shared_user = UserProfile.objects.get(username=shared_username)
 
             if repo.shared_users.filter(username=shared_username).exists():
-                return HttpResponse("You have already shared this repository to " + shared_username)
+                return HttpResponse("You have already shared this repository to " + shared_username + ".")
 
             repo.shared_users.add(shared_user)
         except UserProfile.DoesNotExist:
-            return HttpResponse("User " + shared_username + " does not exist")
+            return HttpResponse("User \"" + shared_username + "\" does not exist.")
         except Repository.DoesNotExist:
-            return HttpResponse("Repository " + repo_name + " does not exist")
+            return HttpResponse("Repository \"" + repo_name + "\" does not exist.")
 
-        return HttpResponse("Repository " + repo_name + " is successfully shared to " + shared_username)
+        return HttpResponse("Repository \"" + repo_name + "\" is now shared with " + shared_username + ".")
 
 
 class RepositoryView(View):
