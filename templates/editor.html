@@ -127,6 +127,35 @@
                 });
             });
 
+            // Handle: show the share dialog
+             $("#editor_control_share").click((event) => {
+                let save_dialog = $("#repository_sharing_display");
+                save_dialog.removeClass("u-display-none");
+                let save_message = $("#repository_sharing_success_label");
+                save_message.hide();
+            });
+
+            // Handle: share the repository
+            $("#repository_sharing_button").click((event) => {
+                let share_message = $("#repository_sharing_success_label");
+                let shared_username = $("#repository_share_user").val();
+                let repo_name = '{{ repo_name }}';
+                let owner_username = '{{ owner_username }}';
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'share' %}",
+                    data: {
+                        "shared_username": shared_username,
+                        "repo_name":repo_name,
+                        "owner_username": owner_username
+                    },
+                    success: (result) => {
+                        share_message.show();
+                        share_message.text(result);
+                    }
+                });
+            });
+
             // Handler: show the save dialog
             $("#editor_control_save").click((event) => {
                 let save_dialog = $("#file_save_display");
@@ -165,6 +194,11 @@
             // Handler: save dialog close button
             $("#file_save_display_close").click((event) => {
                 $("#file_save_display").addClass("u-display-none");
+            });
+
+            // Handle: share dialog close button
+            $("#repository_sharing_display_close").click((event) => {
+                $("#repository_sharing_display").addClass("u-display-none");
             });
 
             let csrfSafeMethod = (method) =>{
@@ -373,11 +407,12 @@
                 <div class="c-card__body">
                     <div class="c-input-group">
                         <div class="o-field">
-                            <input id="file_save_name" class="c-field" placeholder="File name">
+                            <input id="repository_share_user" class="c-field" placeholder="Enter the username of the user
+you want to share this repository to">
                         </div>
                         <button id="repository_sharing_button" class="c-button c-button--success">Share this repo</button>
                     </div>
-                    <div class="c-alert c-alert--success" style="margin-top: 20px" id="file_save_success_label">
+                    <div class="c-alert c-alert--success" style="margin-top: 20px" id="repository_sharing_success_label">
                     </div>
                 </div>
             </div>

@@ -14,18 +14,23 @@ class RepositorySharingView(View):
     @method_decorator(login_required(login_url='login'))
     def post(self, request):
         user = request.user
+        owner_username = request.POST.get("owner_username", "")
         shared_username = request.POST.get("shared_username", "")
         repo_name = request.POST.get("repo_name", "")
-        
+
+        # Check if the operator is the owner
+        if not owner_username == user.username:
+            return HttpResponse("Sharing failed, you need to be the owner of the repository in order to share")
+
         try:
             repo = Repository.objects.get(name=repo_name, user=user)
-            shared_user = UserProfile.objects.get(name=shared_username)
+            shared_user = UserProfile.objects.get(username=shared_username)
+            repo.shared_users.add(shared_user)
         except UserProfile.DoesNotExist:
             return HttpResponse("User " + shared_username + " does not exist")
         except Repository.DoesNotExist:
             return HttpResponse("Repository " + repo_name + " does not exist")
 
-        repo.shared_users.add(shared_user)
         return HttpResponse("Repository " + repo_name + " is successfully shared to " + shared_username)
 
 

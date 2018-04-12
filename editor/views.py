@@ -42,7 +42,7 @@ class EditorView(View):
         if not os.path.isdir(repo_path):
             os.makedirs(repo_path)
 
-        return render(request, "editor.html", {"path": repo_path})
+        return render(request, "editor.html", {"path": repo_path, "repo_name": repo_name, "owner_username": owner.username})
 
     def post(self, request):
         """Runs the user-entered code."""
