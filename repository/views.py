@@ -37,7 +37,7 @@ class RepositoryView(View):
             user = request.user
             repos = Repository.objects.filter(user=user)
             repos = repos.extra(order_by=["name"])
-            return render(request, 'files.html', {'repos': repos, 'err_msg': 'Repository' + repo_name+' already exists'})
+            return render(request, 'files.html', {'repos': repos, 'err_msg': 'Repository "' + repo_name + '" already exists'})
 
 class RepositoryFileView(View):
     @method_decorator(login_required(login_url='login'))
