@@ -203,6 +203,11 @@
                 $("#file_save_display").addClass("u-display-none");
             });
 
+            // Handler: share dialog close button
+            $("#repository_sharing_display_close").click((event) => {
+                $("#repository_sharing_display").addClass("u-display-none");
+            });
+
             let csrfSafeMethod = (method) =>{
                 // these HTTP methods do not require CSRF protection
                 return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
@@ -409,11 +414,12 @@
                 <div class="c-card__body">
                     <div class="c-input-group">
                         <div class="o-field">
-                            <input id="file_save_name" class="c-field" placeholder="File name">
+                            <input id="repository_share_user" class="c-field" placeholder="Please enter the username
+of the user you want to share to">
                         </div>
                         <button id="repository_sharing_button" class="c-button c-button--success">Share this repo</button>
                     </div>
-                    <div class="c-alert c-alert--success" style="margin-top: 20px" id="file_save_success_label">
+                    <div class="c-alert c-alert--success" style="margin-top: 20px" id="repository_sharing_success_label">
                     </div>
                 </div>
             </div>
