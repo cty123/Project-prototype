@@ -64,7 +64,7 @@ class EditorView(View):
 
         flags = shlex.split(flags, posix=True)
 
-        result = ""
+        result = []
         if language == "c":
             result = run_c(code, filename, flags)
         elif language == "cpp":
@@ -73,6 +73,8 @@ class EditorView(View):
             result = run_java(code, filename, flags)
         elif language == "python":
             result = run_python(code, filename, flags)
+        else:
+            result = [["ERROR", "Pick a language to execute code!"]]
 
         os.chdir(os.path.dirname(current_dir))
 
