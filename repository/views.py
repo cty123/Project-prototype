@@ -4,9 +4,29 @@ from django.utils.decorators import method_decorator
 from django.views.generic import View
 from django.http import HttpResponse
 from repository.models import Repository
+from users.models import UserProfile
 
 import re
 import os
+
+
+class RepositorySharingView(View):
+    @method_decorator(login_required(login_url='login'))
+    def post(self, request):
+        user = request.user
+        shared_username = request.POST.get("shared_username", "")
+        repo_name = request.POST.get("repo_name", "")
+        
+        try:
+            repo = Repository.objects.get(name=repo_name, user=user)
+            shared_user = UserProfile.objects.get(name=shared_username)
+        except UserProfile.DoesNotExist:
+            return HttpResponse("User " + shared_username + " does not exist")
+        except Repository.DoesNotExist:
+            return HttpResponse("Repository " + repo_name + " does not exist")
+
+        repo.shared_users.add(shared_user)
+        return HttpResponse("Repository " + repo_name + " is successfully shared to " + shared_username)
 
 
 class RepositoryView(View):
@@ -15,7 +35,9 @@ class RepositoryView(View):
         user = request.user
         repos = Repository.objects.filter(user=user)
         repos = repos.extra(order_by=["name"])
-        return render(request, 'files.html', {'repos': repos})
+        shared_repos = Repository.objects.filter(shared_users=user)
+        shared_repos = shared_repos.extra(order_by=["name"])
+        return render(request, 'files.html', {'repos': repos, 'shared_repos': shared_repos})
 
     @method_decorator(login_required(login_url='login'))
     def post(self, request):
@@ -38,6 +60,7 @@ class RepositoryView(View):
             repos = Repository.objects.filter(user=user)
             repos = repos.extra(order_by=["name"])
             return render(request, 'files.html', {'repos': repos, 'err_msg': 'Repository "' + repo_name + '" already exists'})
+
 
 class RepositoryFileView(View):
     @method_decorator(login_required(login_url='login'))

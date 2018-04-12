@@ -36,7 +36,7 @@
             <p>Select a repository to start coding.</p>
             <ul>
                 {% for repo in repos %}
-                    <li><a class="c-link" href="{% url 'e' repo.name %}">{{ repo.name }}</a></li>
+                    <li><a class="c-link" href="{% url 'e' user.username repo.name %}">{{ repo.name }}</a></li>
                 {% endfor %}
             </ul>
         {% else %}
@@ -64,7 +64,7 @@
         {% if shared_repos %}
             <ul>
                 {% for shared_repo in shared_repos %}
-                    <li><a class="c-link" href={% url 'e' shared_repo.name %}>{{ shared_repo.name }}</a></li>
+                    <li><a class="c-link" href={% url 'e' shared_repo.user.username shared_repo.name %}>{{ shared_repo.name }}</a></li>
                 {% endfor %}
             </ul>
         {% else %}

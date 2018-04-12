@@ -361,6 +361,30 @@
         </div>
     </div>
 
+    <!-- Repository sharing dialog -->
+    <div id="repository_sharing_display" class="u-display-none">
+        <div class="c-overlay c-overlay--visible"></div>
+        <div class="o-modal">
+            <div class="c-card">
+                <header class="c-card__header">
+                    <button id="repository_sharing_display_close" type="button" class="c-button c-button--close">&times;</button>
+                    <h2 class="c-heading">Sharing</h2>
+                </header>
+                <div class="c-card__body">
+                    <div class="c-input-group">
+                        <div class="o-field">
+                            <input id="file_save_name" class="c-field" placeholder="File name">
+                        </div>
+                        <button id="repository_sharing_button" class="c-button c-button--success">Share this repo</button>
+                    </div>
+                    <div class="c-alert c-alert--success" style="margin-top: 20px" id="file_save_success_label">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     {% csrf_token %}
     <script type="text/javascript">
         // using jQuery
