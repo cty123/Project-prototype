@@ -62,9 +62,10 @@
 
         <h1>Repositories shared with you</h1>
         {% if shared_repos %}
+            <p>Select a repository to start coding.</p>
             <ul>
                 {% for shared_repo in shared_repos %}
-                    <li><a class="c-link" href={% url 'e' shared_repo.user.username shared_repo.name %}>{{ shared_repo.name }}</a></li>
+                    <li><a class="c-link" href={% url 'e' shared_repo.user.username shared_repo.name %}>{{ shared_repo.name }}</a> - shared by {{ shared_repo.user.nick_name }} ({{ shared_repo.user.username }})</li>
                 {% endfor %}
             </ul>
         {% else %}
