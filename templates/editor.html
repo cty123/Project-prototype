@@ -241,6 +241,8 @@
                     },
                     success: (result) => {
                         editor.setValue(result, 1);
+                        $("#editor_run_filename").val(filename);
+                        $("#editor_run_args").val("");
                     }
                 });
             });
