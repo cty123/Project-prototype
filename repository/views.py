@@ -85,7 +85,7 @@ class RepositoryFileView(View):
 
             formatted_files = "<ul>"
             for file in files:
-                formatted_files += "<li><a class=\"c-link file_open_item\">" + file + "</a></li>"
+                formatted_files += "<li><a class=\"c-link file_open_item\">" + file + "</a> <a style=\"cursor: pointer; color: red\" class=\"file_delete_item\">&times;</a></li>"
             formatted_files += "</ul>"
 
             if len(files) == 0:
@@ -93,7 +93,7 @@ class RepositoryFileView(View):
 
             return HttpResponse(formatted_files)
 
-        else:
+        elif mode == "file":
             filename = request.GET.get("filename", "")
 
             f = open(os.path.join(path, filename), "r")
@@ -108,10 +108,20 @@ class RepositoryFileView(View):
 
         path = request.POST.get("path", "")
         filename = request.POST.get("filename", "")
-        text = request.POST.get("text")
+        mode = request.POST.get("mode", "")
 
-        f = open(os.path.join(path, filename), "w")
-        f.write(text)
-        f.close()
+        if mode == "save":
+            text = request.POST.get("text", "")
 
-        return HttpResponse("File saved")
+            f = open(os.path.join(path, filename), "w")
+            f.write(text)
+            f.close()
+
+            return HttpResponse("File saved")
+
+        elif mode == "delete":
+
+            os.remove(os.path.join(path, filename))
+
+            return HttpResponse("File deleted")
+

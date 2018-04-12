@@ -187,7 +187,8 @@
                     data: {
                         "path": "{{ path }}",
                         "filename": filename,
-                        "text": text
+                        "text": text,
+                        "mode": "save"
                     },
                     success: (result) => {
                         save_message.show();
@@ -243,6 +244,35 @@
                         editor.setValue(result, 1);
                         $("#editor_run_filename").val(filename);
                         $("#editor_run_args").val("");
+                    }
+                });
+            });
+
+            $(".file_delete_item").click((event) => {
+                let filename = $(event.target).prev().text();
+
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'repo_files' %}",
+                    data: {
+                        "path": "{{ path }}",
+                        "filename": filename,
+                        "mode": "delete"
+                    },
+                    success: (result) => {
+                        $.ajax({
+                            type: "GET",
+                            url: "{% url 'repo_files' %}",
+                            data: {
+                                "mode": "list",
+                                "path": "{{ path }}"
+                            },
+                            success: (result) => {
+                                $("#file_open_display_list").html(result);
+
+                                bind_open_event();
+                            }
+                        });
                     }
                 });
             });
