@@ -48,7 +48,8 @@
                         "text": text,
                         "language": language,
                         "filename": filename,
-                        "flags": flags
+                        "flags": flags,
+                        "path": "{{ path }}"
                     },
                     success: (result) => {
                         let output = $("#output");
@@ -160,6 +161,7 @@
                     success: (result) => {
                         save_message.show();
                         save_message.text(result);
+                        $("#editor_run_filename").val(filename);
                     }
                 });
             });
