@@ -25,6 +25,10 @@ class RepositorySharingView(View):
         try:
             repo = Repository.objects.get(name=repo_name, user=user)
             shared_user = UserProfile.objects.get(username=shared_username)
+
+            if repo.shared_users.filter(username=shared_username).exists():
+                return HttpResponse("You have already shared this repository to " + shared_username)
+
             repo.shared_users.add(shared_user)
         except UserProfile.DoesNotExist:
             return HttpResponse("User " + shared_username + " does not exist")

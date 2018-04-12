@@ -41,6 +41,8 @@
                 let language = $("#editor_control_language").val();
                 let filename = $("#editor_run_filename").val();
                 let flags = $("#editor_run_args").val();
+                let path = '{{ path }}';
+
                 $.ajax({
                     type: "POST",
                     url: "{% url 'editor' %}",
@@ -48,7 +50,8 @@
                         "text": text,
                         "language": language,
                         "filename": filename,
-                        "flags": flags
+                        "flags": flags,
+                        "path": path
                     },
                     success: (result) => {
                         let output = $("#output");
@@ -189,6 +192,7 @@
                     success: (result) => {
                         save_message.show();
                         save_message.text(result);
+                        $("#editor_run_filename").val(filename);
                     }
                 });
             });
@@ -344,6 +348,7 @@
                 </label>
             </div>
             <button id="editor_control_share" class="c-button c-button--info" style="padding: 15px">Share</button>
+            <button id="editor_control_new" class="c-button c-button--warning" style="padding: 15px">New</button>
             <button id="editor_control_load" class="c-button c-button--error" style="padding: 15px">Load</button>
             <button id="editor_control_save" class="c-button c-button--success" style="padding: 15px">Save</button>
         </div>
