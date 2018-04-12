@@ -25,6 +25,8 @@ def run_c(code, filename, flags):
         result.append(["COMPILER OUTPUT", compile_output])
     except subprocess.TimeoutExpired:
         result.append(["ERROR", "Timeout after 5 seconds"])
+    except subprocess.CalledProcessError as e:
+        result.append(["COMPILER OUTPUT", e.output])
 
     if os.path.isfile(executable):
         try:
@@ -64,6 +66,8 @@ def run_cpp(code, filename, flags):
         result.append(["COMPILER OUTPUT", compile_output])
     except subprocess.TimeoutExpired:
         result.append(["ERROR", "Timeout after 5 seconds"])
+    except subprocess.CalledProcessError as e:
+        result.append(["COMPILER OUTPUT", e.output])
 
     if os.path.isfile(executable):
         try:
@@ -103,6 +107,8 @@ def run_java(code, filename, flags):
         result.append(["COMPILER OUTPUT", compile_output])
     except subprocess.TimeoutExpired:
         result.append(["ERROR", "Timeout after 5 seconds"])
+    except subprocess.CalledProcessError as e:
+        result.append(["COMPILER OUTPUT", e.output])
 
     if os.path.isfile(executable + ".class"):
         try:
@@ -139,6 +145,8 @@ def run_python(code, filename, flags):
         result.append(["EXECUTION OUTPUT", compile_output])
     except subprocess.TimeoutExpired:
         result.append(["ERROR", "Timeout after 5 seconds"])
+    except subprocess.CalledProcessError as e:
+        result.append(["EXECUTION OUTPUT", e.output])
 
     # clean up
     if generated_name:
