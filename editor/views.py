@@ -7,6 +7,10 @@ import shlex
 from django.shortcuts import render
 from django.views.generic import View
 from django.http import HttpResponse
+from django.shortcuts import redirect
+
+from users.models import UserProfile
+from repository.models import Repository
 
 
 class IndexView(View):
@@ -17,10 +21,22 @@ class IndexView(View):
 
 
 class EditorView(View):
-    def get(self, request, repo_name):
+    def get(self, request, username, repo_name):
         """Shows the editor."""
+        # Look for user
         user = request.user
-        repo_path = "workspaces/repo_" + user.username + "_" + repo_name + "/"
+        try:
+            owner = UserProfile.objects.get(username=username)
+            repo = Repository.objects.get(name=repo_name, user=owner)
+        except UserProfile.DoesNotExist:
+            return redirect('files')
+        except Repository.DoesNotExist:
+            return redirect('files')
+
+        if not repo.shared_users.filter(username=user.username).exists() and not repo.user == user:
+            return redirect('files')
+
+        repo_path = "workspaces/repo_" + username + "_" + repo_name + "/"
 
         # Check if the repo_path exists
         if not os.path.isdir(repo_path):
