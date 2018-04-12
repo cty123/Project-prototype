@@ -79,6 +79,9 @@ class RepositoryFileView(View):
                 formatted_files += "<li><a class=\"c-link file_open_item\">" + file + "</a></li>"
             formatted_files += "</ul>"
 
+            if len(files) == 0:
+                formatted_files = "<p>No files yet!</p>"
+
             return HttpResponse(formatted_files)
 
         else:

@@ -127,6 +127,13 @@
                 });
             });
 
+            // Handler: new file
+            $("#editor_control_new").click((event) => {
+                editor.setValue("", 1);
+                $("#editor_run_filename").val("");
+                $("#editor_run_args").val("");
+            });
+
             // Handler: show the save dialog
             $("#editor_control_save").click((event) => {
                 let save_dialog = $("#file_save_display");
@@ -196,6 +203,8 @@
                     },
                     success: (result) => {
                         editor.setValue(result, 1);
+                        $("#editor_run_filename").val(filename);
+                        $("#editor_run_args").val("");
                     }
                 });
             });
@@ -303,6 +312,7 @@
                 </label>
             </div>
             <button id="editor_control_share" class="c-button c-button--info" style="padding: 15px">Share</button>
+            <button id="editor_control_new" class="c-button c-button--warning" style="padding: 15px">New</button>
             <button id="editor_control_load" class="c-button c-button--error" style="padding: 15px">Load</button>
             <button id="editor_control_save" class="c-button c-button--success" style="padding: 15px">Save</button>
         </div>
