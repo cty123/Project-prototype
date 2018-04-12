@@ -82,6 +82,9 @@
                     case "python":
                         ace_language = "python";
                         break;
+                    default:
+                        ace_language = "text";
+                        break;
                 }
                 editor.session.setMode("ace/mode/" + ace_language);
                 storage.set_values({language: language});
@@ -244,6 +247,35 @@
                         editor.setValue(result, 1);
                         $("#editor_run_filename").val(filename);
                         $("#editor_run_args").val("");
+
+                        let lang = "";
+                        filename = filename.toLowerCase();
+                        if (filename.endsWith(".c")) {
+                            lang = "c";
+                        } else if (filename.endsWith(".cc")) {
+                            lang = "cpp";
+                        } else if (filename.endsWith(".java")) {
+                            lang = "java";
+                        }
+                        $("#editor_control_language").val(lang);
+                        let ace_language;
+                        switch (lang) {
+                            case "c":
+                            case "cpp":
+                                ace_language = "c_cpp";
+                                break;
+                            case "java":
+                                ace_language = "java";
+                                break;
+                            case "python":
+                                ace_language = "python";
+                                break;
+                            default:
+                                ace_language = "text";
+                                break;
+                        }
+                        editor.session.setMode("ace/mode/" + ace_language);
+                        storage.set_values({language: lang});
                     }
                 });
             });
@@ -312,6 +344,7 @@
                 <label class="c-field">
                     Language:
                     <select class="c-field" id="editor_control_language">
+                        <option value="text">None</option>
                         <option value="c">C</option>
                         <option value="cpp">C++</option>
                         <option value="java">Java</option>

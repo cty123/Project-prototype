@@ -124,4 +124,3 @@ class RepositoryFileView(View):
             os.remove(os.path.join(path, filename))
 
             return HttpResponse("File deleted")
-

@@ -4,7 +4,7 @@ let storage = {
             font_size: localStorage.font_size ? localStorage.font_size : 12,
             theme: localStorage.theme ? localStorage.theme : "monokai",
             controls: (localStorage.controls || localStorage.controls === "") ? localStorage.controls : "",
-            language: localStorage.language ? localStorage.language : "c_cpp"
+            language: localStorage.language ? localStorage.language : "text"
         }
     },
     set_values: (new_values) => {
