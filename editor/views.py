@@ -47,17 +47,20 @@ class EditorView(View):
     def post(self, request):
         """Runs the user-entered code."""
 
-        current_dir = os.path.dirname(os.path.realpath(__file__))
-
-        if not os.path.isdir("execution_workspace/" + str(request.user)):
-            os.makedirs("execution_workspace/" + str(request.user))
-
-        os.chdir("execution_workspace/" + str(request.user))
-
         code = request.POST.get("text")
         language = request.POST.get("language")
         filename = request.POST.get("filename")
         flags = request.POST.get("flags")
+        path = request.POST.get("path")
+
+        current_dir = os.path.dirname(os.path.realpath(__file__))
+        base_dir = os.path.dirname(current_dir)
+
+        new_path = os.path.join(base_dir, path)
+        if not os.path.isdir(new_path):
+            os.makedirs(new_path)
+
+        os.chdir(new_path)
 
         flags = shlex.split(flags, posix=True)
 
@@ -71,6 +74,6 @@ class EditorView(View):
         elif language == "python":
             result = run_python(code, filename, flags)
 
-        os.chdir(current_dir)
+        os.chdir(os.path.dirname(current_dir))
 
         return HttpResponse(format(result))

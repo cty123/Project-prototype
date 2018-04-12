@@ -8,6 +8,13 @@
     <link rel="stylesheet" href="{% static "css/editor.css" %}" />
 
     <script src="{% static "jquery/jquery-3.3.1.min.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+        $(document).ready(() => {
+            if (!"{{ err_msg }}") {
+                $("#repo_error_label").hide()
+            }
+        });
+    </script>
 </head>
 <body>
 
@@ -49,7 +56,9 @@
                 <input class="c-button c-button--success" type="submit" value="Create repository" />
             </div>
         </form>
-        <p> {{ err_msg }}</p>
+        <div class="c-alert c-alert--error" style="margin-top: 20px" id="repo_error_label">
+            {{ err_msg }}
+        </div>
 
         <h1>Repositories shared with you</h1>
         {% if shared_repos %}

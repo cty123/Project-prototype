@@ -8,9 +8,11 @@ def run_c(code, filename, flags):
 
     result = []
 
+    generated_name = False
     if filename:
         executable = filename[:-2]
     else:
+        generated_name = True
         executable = str(uuid.uuid4())
         filename = executable + ".c"
 
@@ -32,7 +34,8 @@ def run_c(code, filename, flags):
             result.append(["ERROR", "Timeout after 5 seconds"])
 
     # clean up
-    os.remove(filename)
+    if generated_name:
+        os.remove(filename)
     if os.path.isfile(executable):
         os.remove(executable)
 
@@ -44,9 +47,11 @@ def run_cpp(code, filename, flags):
 
     result = []
 
+    generated_name = False
     if filename:
         executable = filename[:-2]
     else:
+        generated_name = True
         executable = str(uuid.uuid4())
         filename = executable + ".cc"
 
@@ -68,7 +73,8 @@ def run_cpp(code, filename, flags):
             result.append(["ERROR", "Timeout after 5 seconds"])
 
     # clean up
-    os.remove(filename)
+    if generated_name:
+        os.remove(filename)
     if os.path.isfile(executable):
         os.remove(executable)
 
@@ -80,9 +86,11 @@ def run_java(code, filename, flags):
 
     result = []
 
+    generated_name = False
     if filename:
         executable = filename[:-5]
     else:
+        generated_name = True
         result.append(["ERROR", "Filename required"])
         return result
 
@@ -104,7 +112,8 @@ def run_java(code, filename, flags):
             result.append(["ERROR", "Timeout after 5 seconds"])
 
     # clean up
-    os.remove(filename)
+    if generated_name:
+        os.remove(filename)
     if os.path.isfile(executable + ".class"):
         os.remove(executable + ".class")
 
@@ -116,7 +125,9 @@ def run_python(code, filename, flags):
 
     result = []
 
+    generated_name = False
     if not filename:
+        generated_name = True
         filename = str(uuid.uuid4()) + ".py"
 
     f = open(filename, "w+")
@@ -130,6 +141,7 @@ def run_python(code, filename, flags):
         result.append(["ERROR", "Timeout after 5 seconds"])
 
     # clean up
-    os.remove(filename)
+    if generated_name:
+        os.remove(filename)
 
     return result

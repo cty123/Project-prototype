@@ -64,7 +64,7 @@ class RepositoryView(View):
             user = request.user
             repos = Repository.objects.filter(user=user)
             repos = repos.extra(order_by=["name"])
-            return render(request, 'files.html', {'repos': repos, 'err_msg': 'Repository' + repo_name+' already exists'})
+            return render(request, 'files.html', {'repos': repos, 'err_msg': 'Repository "' + repo_name + '" already exists'})
 
 
 class RepositoryFileView(View):
@@ -83,6 +83,9 @@ class RepositoryFileView(View):
             for file in files:
                 formatted_files += "<li><a class=\"c-link file_open_item\">" + file + "</a></li>"
             formatted_files += "</ul>"
+
+            if len(files) == 0:
+                formatted_files = "<p>No files yet!</p>"
 
             return HttpResponse(formatted_files)
 
