@@ -29,9 +29,7 @@
                 <h1>Profile for {{ user.username }}</h1>
                 <p>Nickname: {{ user.nick_name }}</p>
                 <p>Joined on {{ user.date_joined }}</p>
-                <p>Email: {{ user.email }}</p>
-                <p>$filecount files saved</p>
-                <p>Mostly codes in $highestlangcount</p>
+                <p>Email: <a class="c-link" href="mailto:{{ user.email }}">{{ user.email }}</a></p>
             </div>
         </div>
         <div class="o-grid__cell">
