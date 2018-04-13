@@ -1,17 +1,86 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Manage</title>
+    <title>Manage Repository - Prototype Editor</title>
+    <link rel="shortcut icon" href="{%  static 'favicon.ico' %}" />
+    <link rel="stylesheet" href="https://unpkg.com/blaze@4.0.0-6/scss/dist/blaze.min.css" />
+    <link rel="stylesheet" href="{% static "css/editor.css" %}" />
+
+    <script src="{% static "jquery/jquery-3.3.1.min.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+        $(document).ready(() => {
+            $("#repository_delete_checkbox").change(() => {
+                let delete_button = $("#repository_delete_button");
+                if($("#repository_delete_checkbox").is(":checked")) {
+                    delete_button.prop("disabled", false);
+                } else {
+                    delete_button.prop("disabled", true)
+                }
+            });
+        });
+    </script>
 </head>
 <body>
-<p>Shared users are: </p>
 
-{% for user in repo.shared_users.all %}
-    <p>{{ user.username }}({{ user.nick_name }})</p>
-{% endfor %}
+    <ul class="c-nav c-nav--inline">
+        <li class="c-nav__item">Prototype Editor</li>
+        <a href="{% url 'files' %}"><li class="c-nav__item">Files</li></a>
+        <a href="{% url 'profile' %}"><li class="c-nav__item">Profile</li></a>
+        <a href="{% url 'logout' %}"><li class="c-nav__item c-nav__item--right">Logout</li></a>
+        {% if user.is_authenticated %}
+                <a><li class="c-nav__item c-nav__item--right">Welcome, {{ user.username }}</li></a>
+            {% else %}
+                <a href="{% url 'login' %}"><li class="c-nav__item c-nav__item--right">Login/Register</li></a>
+        {% endif %}
+    </ul>
 
-<p>Repo name is: {{ repo.name }}</p>
+    <div id="body_login">
+        <h1>Details for "{{ repo.name }}"</h1>
+
+        <h3>Shared users</h3>
+
+        {% if not repo.shared_users.all %}
+            <p>This repository is not shared with any other users.</p>
+        {% else %}
+            <p>This repository is shared with the following users: </p>
+
+            <ul>
+            {% for user in repo.shared_users.all %}
+                <li>{{ user.nick_name }} ({{ user.username }}) <a style="cursor: pointer; color: red">&times;</a></li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+
+        <h3>Share with another user</h3>
+
+        <div class="c-input-group">
+            <div class="o-field">
+                <input id="repository_share_user" class="c-field" placeholder="Username" />
+            </div>
+            <button id="repository_sharing_button" class="c-button c-button--success">Share repository</button>
+        </div>
+
+        <h3>Rename repository</h3>
+
+        <p>Renaming a repository will change the name displayed to you and other users.</p>
+
+        <div class="c-input-group">
+            <div class="o-field">
+                <input id="repository_rename" class="c-field" placeholder="New name" />
+            </div>
+            <button id="repository_rename_button" class="c-button c-button--success">Rename repository</button>
+        </div>
+
+        <h3>Delete repository</h3>
+
+        <p><strong>Warning</strong> Deleting a repository is permanent. All code will be lost and cannot be recovered.</p>
+        <div style="text-align: center">
+            <label class="c-field c-field--choice"><input type="checkbox" id="repository_delete_checkbox" /> I understand this is permanent and wish to continue</label>
+            <button id="repository_delete_button" class="c-button c-button--error" disabled>Delete repository</button>
+        </div>
+    </div>
 
 </body>
 </html>

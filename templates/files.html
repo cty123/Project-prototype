@@ -36,7 +36,10 @@
             <p>Select a repository to start coding.</p>
             <ul>
                 {% for repo in repos %}
-                    <li><a class="c-link" href="{% url 'e' user.username repo.name %}">{{ repo.name }}</a></li>
+                    <li>
+                        <a class="c-link" href="{% url 'e' user.username repo.name %}">{{ repo.name }}</a>
+                        <a class="c-link" style="color: #4caf50" href="{% url 'manage' user.username repo.name %}">(manage)</a>
+                    </li>
                 {% endfor %}
             </ul>
         {% else %}
