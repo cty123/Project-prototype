@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.utils.decorators import method_decorator
 from django.views.generic import View
 from django.http import HttpResponse
@@ -124,3 +124,28 @@ class RepositoryFileView(View):
             os.remove(os.path.join(path, filename))
 
             return HttpResponse("File deleted")
+
+
+class RepositoryManageView(View):
+    @method_decorator(login_required(login_url='login'))
+    def get(self, request, owner_username, repo_name):
+        user = request.user
+        try:
+            owner = UserProfile.objects.get(username=owner_username)
+            # If the acting user is not the owner of the repository
+            if user != owner:
+                # Redirect to previous page
+                return redirect('files')
+            repo = Repository.objects.get(name=repo_name, user=user)
+            return render(request, 'manage.html', {"repo": repo})
+        except UserProfile.DoesNotExist:
+            # Redirect to previous page
+            return redirect('files')
+        except Repository.DoesNotExist:
+            # Redirect to previous page
+            return redirect('files')
+
+    @method_decorator(login_required(login_url='login'))
+    def post(self):
+        # update repository info
+        pass

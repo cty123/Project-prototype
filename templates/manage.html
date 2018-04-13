@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage</title>
+</head>
+<body>
+<p>Shared users are: </p>
+
+{% for user in repo.shared_users.all %}
+    <p>{{ user.username }}({{ user.nick_name }})</p>
+{% endfor %}
+
+<p>Repo name is: {{ repo.name }}</p>
+
+</body>
+</html>
