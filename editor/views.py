@@ -3,10 +3,12 @@ from .formatter import *
 
 import os
 import shlex
+import base64
+import hashlib
 
 from django.shortcuts import render
 from django.views.generic import View
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect
 
 from users.models import UserProfile
@@ -18,6 +20,53 @@ class IndexView(View):
         """Shows the intro page."""
 
         return render(request, "index.html")
+
+
+class EditorUpdateView(View):
+    def get(self, request):
+        """Checks for updates."""
+
+        js_hash = request.GET.get("hash")
+        filename = request.GET.get("filename")
+        path = request.GET.get("path")
+
+        full_path = os.path.join(path, filename)
+
+        try:
+            f = open(full_path, "r")
+            data = f.read()
+            f.close()
+        except:
+            return JsonResponse({"updated": False})
+
+        decoding_data = data.encode("utf-8")
+        py_hash = base64.b64encode(hashlib.sha256(decoding_data).digest())
+        print("python: " + py_hash.decode())
+        print("js: " + js_hash)
+        if py_hash.decode() == js_hash:
+            return JsonResponse({"updated": False})
+        else:
+            return JsonResponse({"updated": True, "data": data})
+
+    def post(self, request):
+        """Updates the file."""
+
+        code = request.POST.get("text")
+        filename = request.POST.get("filename")
+        path = request.POST.get("path")
+
+        if filename.strip() == "":
+            return HttpResponse("not updated")
+
+        full_path = os.path.join(path, filename)
+        if not os.path.isfile(full_path):
+            return HttpResponse("not updated")
+
+        f = open(full_path, "w")
+        f.write(code if code else "")
+        f.close()
+
+        return HttpResponse("updated")
 
 
 class EditorView(View):

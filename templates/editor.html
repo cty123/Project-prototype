@@ -9,6 +9,7 @@
 
     <script src="{% static "js/storage.js" %}" type="text/javascript" charset="utf-8"></script>
 
+    <script src="{% static 'js/sha256.js' %}" type="text/javascript" charset="utf-8"></script>
     <script src="{% static "jquery/jquery-3.3.1.min.js" %}" type="text/javascript" charset="utf-8"></script>
     <script src="{% static "ace/ace.js" %}" type="text/javascript" charset="utf-8"></script>
 
@@ -34,6 +35,60 @@
             editor.session.setMode("ace/mode/" + initial_language);
             editor.setFontSize(parseInt(settings.font_size));
             editor.setKeyboardHandler(settings.controls);
+
+            $("#editor_run_filename").val("");
+            $("#editor_run_args").val("");
+
+            // Handler: save data for collaborative editing
+            editor.getSession().on("change", () => {
+                let filename = $("#editor_run_filename").val();
+                if (filename.trim() === "") {
+                    return;
+                }
+                let text = editor.getValue();
+
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'updater' %}",
+                    data: {
+                        "text": text,
+                        "filename": filename,
+                        "path": "{{ path }}"
+                    },
+                    success: (result) => {
+                        // nothing to do here
+                    }
+                });
+            });
+
+            // Handler: get data for collaborative editing
+            setInterval(() => {
+                let filename = $("#editor_run_filename").val();
+                if (filename.trim() === "") {
+                    return;
+                }
+                let text = editor.getValue();
+
+                let sha256 = new jsSHA('SHA-256', 'TEXT');
+                sha256.update(text);
+                let hash = sha256.getHash("B64");
+
+                $.ajax({
+                    type: "GET",
+                    url: "{% url 'updater' %}",
+                    data: {
+                        "hash": hash,
+                        "filename": filename,
+                        "path": "{{ path }}"
+                    },
+                    dataType: "json",
+                    success: (result) => {
+                        if (result.updated) {
+                            editor.setValue(result.data, 1);
+                        }
+                    }
+                });
+            }, 500);
 
             // Handler: run the code
             $("#editor_run_btn").click(() => {
