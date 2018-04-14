@@ -11,13 +11,19 @@
 
     <script src="{% static "jquery/jquery-3.3.1.min.js" %}" type="text/javascript" charset="utf-8"></script>
     <script src="{% static "ace/ace.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "ace-collab-ext.js" %}" type="text/javascript" charset="utf-8"></script>
+    <style>
+        .ace-multi-cursor{
+            position: absolute;
+            border-left: 2px solid gold;
+        }
 
+    </style>
     <script type="text/javascript">
         let editor;
         let csrftoken;
         let settings;
         $(document).ready(() => {
-
             settings = storage.get_values();
             $("#editor_control_language").val(settings.language);
             $("#editor_control_theme").val(settings.theme);
@@ -34,6 +40,21 @@
             editor.session.setMode("ace/mode/" + initial_language);
             editor.setFontSize(parseInt(settings.font_size));
             editor.setKeyboardHandler(settings.controls);
+
+            let curMgr = new AceCollabExt.AceMultiCursorManager(editor.getSession());
+
+            function new_Editor(username, color) {
+                curMgr.addCursor(1, "User 1", "orange", {row: 0, column: 0});
+            }
+
+            editor.selection.on('changeCursor', function (){
+                let pos = editor.getCursorPosition();
+                // Broadcast the new position
+            });
+
+            editor.getSession().getDocument().on("change", function(e){
+                console.log(e)
+            });
 
             // Handler: run the code
             $("#editor_run_btn").click(() => {
