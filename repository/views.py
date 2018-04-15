@@ -64,6 +64,7 @@ class RepositoryView(View):
             repo = Repository(name=repo_name, user=repo_owner)
             repo.set_path()
             repo.save()
+            os.makedirs(os.path.join("workspaces", repo.repo_path))
             return self.get(request=request)
         else:
             user = request.user
