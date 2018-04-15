@@ -10,13 +10,65 @@
 
     <script src="{% static "jquery/jquery-3.3.1.min.js" %}" type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript">
+        let csrftoken;
         $(document).ready(() => {
+            $("#repository_rename_label").hide();
+
             $("#repository_delete_checkbox").change(() => {
                 let delete_button = $("#repository_delete_button");
                 if($("#repository_delete_checkbox").is(":checked")) {
                     delete_button.prop("disabled", false);
                 } else {
                     delete_button.prop("disabled", true)
+                }
+            });
+
+            $("#repository_rename_button").click(() => {
+                let new_name = $("#repository_rename").val();
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'manage_post' %}",
+                    data: {
+                        "mode": "rename",
+                        "repo_name": "{{ repo_name }}",
+                        "user": "{{ user }}",
+                        "new_name": new_name
+                    },
+                    success: (result) => {
+                        if (result === "renamed") {
+                            window.location.replace("{% url 'files' %}");
+                        } else {
+                            $("#repository_rename_label").show();
+                            $("#repository_rename_label").text(result);
+                        }
+                    }
+                });
+            });
+
+            $("#repository_delete_button").click(() => {
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'manage_post' %}",
+                    data: {
+                        "mode": "delete",
+                        "repo_name": "{{ repo_name }}",
+                        "user": "{{ user }}"
+                    },
+                    success: (result) => {
+                        window.location.href = "{% url 'files' %}";
+                    }
+                });
+            });
+
+            let csrfSafeMethod = (method) =>{
+                // these HTTP methods do not require CSRF protection
+                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+            };
+            $.ajaxSetup({
+                beforeSend: (xhr, settings) => {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
                 }
             });
         });
@@ -73,6 +125,8 @@
             <button id="repository_rename_button" class="c-button c-button--success">Rename repository</button>
         </div>
 
+        <div class="c-alert c-alert--success" style="margin-top: 20px" id="repository_rename_label"></div>
+
         <h3>Delete repository</h3>
 
         <p><strong>Warning</strong> Deleting a repository is permanent. All code will be lost and cannot be recovered.</p>
@@ -81,6 +135,12 @@
             <button id="repository_delete_button" class="c-button c-button--error" disabled>Delete repository</button>
         </div>
     </div>
+
+    {% csrf_token %}
+    <script type="text/javascript">
+        // using jQuery
+        csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+    </script>
 
 </body>
 </html>

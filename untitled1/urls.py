@@ -36,6 +36,7 @@ urlpatterns = [
     url(r'^editor/(?P<username>\w{0,20})/(?P<repo_name>\w{0,50})/$', EditorView.as_view(), name='e'),
     url(r'^repo_files$', RepositoryFileView.as_view(), name='repo_files'),
     url(r'^share/$', RepositorySharingView.as_view(), name='share'),
+    url(r'^manage/$', RepositoryManageView.as_view(), name='manage_post'),
     url(r'^manage/(?P<owner_username>\w{0,20})/(?P<repo_name>\w{0,50})/$', RepositoryManageView.as_view(), name='manage'),
     url(r'^updater/$', EditorUpdateView.as_view(), name='updater')
 ]
