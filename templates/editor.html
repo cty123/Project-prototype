@@ -9,16 +9,21 @@
 
     <script src="{% static "js/storage.js" %}" type="text/javascript" charset="utf-8"></script>
 
-    <script src="{% static 'js/sha256.js' %}" type="text/javascript" charset="utf-8"></script>
     <script src="{% static "jquery/jquery-3.3.1.min.js" %}" type="text/javascript" charset="utf-8"></script>
     <script src="{% static "ace/ace.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "ace-collab-ext.js" %}" type="text/javascript" charset="utf-8"></script>
+    <style>
+        .ace-multi-cursor{
+            position: absolute;
+            border-left: 2px solid gold;
+        }
 
+    </style>
     <script type="text/javascript">
         let editor;
         let csrftoken;
         let settings;
         $(document).ready(() => {
-
             settings = storage.get_values();
             $("#editor_control_language").val(settings.language);
             $("#editor_control_theme").val(settings.theme);
@@ -36,59 +41,20 @@
             editor.setFontSize(parseInt(settings.font_size));
             editor.setKeyboardHandler(settings.controls);
 
-            $("#editor_run_filename").val("");
-            $("#editor_run_args").val("");
+            let curMgr = new AceCollabExt.AceMultiCursorManager(editor.getSession());
 
-            // Handler: save data for collaborative editing
-            editor.getSession().on("change", () => {
-                let filename = $("#editor_run_filename").val();
-                if (filename.trim() === "") {
-                    return;
-                }
-                let text = editor.getValue();
+            function new_Editor(username, color) {
+                curMgr.addCursor(1, "User 1", "orange", {row: 0, column: 0});
+            }
 
-                $.ajax({
-                    type: "POST",
-                    url: "{% url 'updater' %}",
-                    data: {
-                        "text": text,
-                        "filename": filename,
-                        "path": "{{ path }}"
-                    },
-                    success: (result) => {
-                        // nothing to do here
-                    }
-                });
+            editor.selection.on('changeCursor', function (){
+                let pos = editor.getCursorPosition();
+                // Broadcast the new position
             });
 
-            // Handler: get data for collaborative editing
-            setInterval(() => {
-                let filename = $("#editor_run_filename").val();
-                if (filename.trim() === "") {
-                    return;
-                }
-                let text = editor.getValue();
-
-                let sha256 = new jsSHA('SHA-256', 'TEXT');
-                sha256.update(text);
-                let hash = sha256.getHash("B64");
-
-                $.ajax({
-                    type: "GET",
-                    url: "{% url 'updater' %}",
-                    data: {
-                        "hash": hash,
-                        "filename": filename,
-                        "path": "{{ path }}"
-                    },
-                    dataType: "json",
-                    success: (result) => {
-                        if (result.updated) {
-                            editor.setValue(result.data, 1);
-                        }
-                    }
-                });
-            }, 500);
+            editor.getSession().getDocument().on("change", function(e){
+                console.log(e)
+            });
 
             // Handler: run the code
             $("#editor_run_btn").click(() => {
