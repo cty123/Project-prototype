@@ -19,7 +19,8 @@ from django.urls import path
 from django.views.generic.base import RedirectView
 from editor.views import EditorView, IndexView, EditorUpdateView
 from users.views import LoginView, ProfileView, LogoutView, RegisterView
-from repository.views import RepositoryView, RepositoryFileView, RepositorySharingView, RepositoryManageView
+from repository.views import RepositoryView, RepositoryFileView, RepositorySharingView, RepositoryManageView, \
+    RepositoryRefreshView
 
 favicon_view = RedirectView.as_view(url='/static/favicon.ico', permanent=True)
 
@@ -37,6 +38,7 @@ urlpatterns = [
     url(r'^repo_files$', RepositoryFileView.as_view(), name='repo_files'),
     url(r'^share/$', RepositorySharingView.as_view(), name='share'),
     url(r'^manage/$', RepositoryManageView.as_view(), name='manage_post'),
+    url(r'^manage_refresh/$', RepositoryRefreshView.as_view(), name='manage_refresh'),
     url(r'^manage/(?P<owner_username>\w{0,20})/(?P<repo_name>\w{0,50})/$', RepositoryManageView.as_view(), name='manage'),
     url(r'^updater/$', EditorUpdateView.as_view(), name='updater')
 ]

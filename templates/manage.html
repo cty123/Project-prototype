@@ -12,17 +12,44 @@
     <script type="text/javascript">
         let csrftoken;
         $(document).ready(() => {
-            $("#repository_rename_label").hide();
+            let rename_label = $("#repository_rename_label");
+            let sharing_label = $("#repository_sharing_label");
+            rename_label.hide();
+            sharing_label.hide();
 
-            $("#repository_delete_checkbox").change(() => {
-                let delete_button = $("#repository_delete_button");
-                if($("#repository_delete_checkbox").is(":checked")) {
-                    delete_button.prop("disabled", false);
-                } else {
-                    delete_button.prop("disabled", true)
-                }
+            // Handler: share repository
+            $("#repository_sharing_button").click(() => {
+                let shared_username = $("#repository_share_user").val();
+                let repo_name = '{{ repo_name }}';
+                let owner_username = '{{ user }}';
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'share' %}",
+                    data: {
+                        "shared_username": shared_username,
+                        "repo_name":repo_name,
+                        "owner_username": owner_username
+                    },
+                    success: (result) => {
+                        sharing_label.show();
+                        sharing_label.text(result);
+
+                        $.ajax({
+                            type: "GET",
+                            url: "{% url 'manage_refresh' %}",
+                            data: {
+                                "repo_name": "{{ repo_name }}"
+                            },
+                            success: (result) => {
+                                result = JSON.parse(result);
+                                build_user_list(result);
+                            }
+                        });
+                    }
+                });
             });
 
+            // Handler: rename repository
             $("#repository_rename_button").click(() => {
                 let new_name = $("#repository_rename").val();
                 $.ajax({
@@ -38,13 +65,24 @@
                         if (result === "renamed") {
                             window.location.replace("{% url 'files' %}");
                         } else {
-                            $("#repository_rename_label").show();
-                            $("#repository_rename_label").text(result);
+                            rename_label.show();
+                            rename_label.text(result);
                         }
                     }
                 });
             });
 
+            // Handler: enable delete button
+            $("#repository_delete_checkbox").change(() => {
+                let delete_button = $("#repository_delete_button");
+                if($("#repository_delete_checkbox").is(":checked")) {
+                    delete_button.prop("disabled", false);
+                } else {
+                    delete_button.prop("disabled", true)
+                }
+            });
+
+            // Handler: delete repository
             $("#repository_delete_button").click(() => {
                 $.ajax({
                     type: "POST",
@@ -71,7 +109,54 @@
                     }
                 }
             });
+            bind_remove_user();
         });
+
+        let build_user_list = result => {
+            let list = "";
+            for (let i = 0; i < result.length; i++) {
+                let item = result[i];
+                list += "<li> " + item.fields.nick_name + " (" + item.fields.username + ") ";
+                list += "<a class=\"remove_user\" style=\"cursor: pointer; color: red\" data-username=\"" + item.fields.username + "\">&times;</a>";
+                list += "</li>";
+            }
+            $("#shared_user_list").html(list);
+            let user_paragraph = $("#shared_user_paragraph");
+            if (result.length == 0) {
+                user_paragraph.text("This repository is not shared with any other users.")
+            } else {
+                user_paragraph.text("This repository is shared with the following users:");
+            }
+            bind_remove_user();
+        };
+
+        let bind_remove_user = () => {
+            $(".remove_user").click(event => {
+                let username = $(event.target).data("username");
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'manage_refresh' %}",
+                    data: {
+                        "username": username,
+                        "repo_name": "{{ repo_name }}",
+                        "user": "{{ user }}"
+                    },
+                    success: (result) => {
+                        $.ajax({
+                            type: "GET",
+                            url: "{% url 'manage_refresh' %}",
+                            data: {
+                                "repo_name": "{{ repo_name }}"
+                            },
+                            success: (result) => {
+                                result = JSON.parse(result);
+                                build_user_list(result);
+                            }
+                        });
+                    }
+                });
+            });
+        };
     </script>
 </head>
 <body>
@@ -93,16 +178,18 @@
 
         <h3>Shared users</h3>
 
-        {% if not repo.shared_users.all %}
-            <p>This repository is not shared with any other users.</p>
-        {% else %}
-            <p>This repository is shared with the following users: </p>
+        <p id="shared_user_paragraph">This repository is not shared with any other users.</p>
 
-            <ul>
-            {% for user in repo.shared_users.all %}
-                <li>{{ user.nick_name }} ({{ user.username }}) <a style="cursor: pointer; color: red">&times;</a></li>
-            {% endfor %}
-            </ul>
+        <ul id="shared_user_list">
+        {% for user in repo.shared_users.all %}
+            <li>{{ user.nick_name }} ({{ user.username }}) <a class="remove_user" style="cursor: pointer; color: red" data-username="{{ user.username }}">&times;</a></li>
+        {% endfor %}
+        </ul>
+
+        {% if repo.shared_users.all|length != 0 %}
+            <script type="text/javascript">
+                $("#shared_user_paragraph").text("This repository is shared with the following users:")
+            </script>
         {% endif %}
 
         <h3>Share with another user</h3>
@@ -113,6 +200,8 @@
             </div>
             <button id="repository_sharing_button" class="c-button c-button--success">Share repository</button>
         </div>
+
+        <div class="c-alert c-alert--success" style="margin-top: 20px" id="repository_sharing_label"></div>
 
         <h3>Rename repository</h3>
 

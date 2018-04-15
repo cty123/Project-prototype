@@ -2,7 +2,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.utils.decorators import method_decorator
 from django.views.generic import View
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+from django.core import serializers
 from repository.models import Repository
 from users.models import UserProfile
 
@@ -28,15 +29,15 @@ class RepositorySharingView(View):
             shared_user = UserProfile.objects.get(username=shared_username)
 
             if repo.shared_users.filter(username=shared_username).exists():
-                return HttpResponse("You have already shared this repository to " + shared_username + ".")
+                return HttpResponse("You have already shared this repository to " + shared_username)
 
             repo.shared_users.add(shared_user)
         except UserProfile.DoesNotExist:
-            return HttpResponse("User \"" + shared_username + "\" does not exist.")
+            return HttpResponse("User \"" + shared_username + "\" does not exist")
         except Repository.DoesNotExist:
-            return HttpResponse("Repository \"" + repo_name + "\" does not exist.")
+            return HttpResponse("Repository \"" + repo_name + "\" does not exist")
 
-        return HttpResponse("Repository \"" + repo_name + "\" is now shared with " + shared_username + ".")
+        return HttpResponse("Repository \"" + repo_name + "\" is now shared with " + shared_username)
 
 
 class RepositoryView(View):
@@ -63,7 +64,6 @@ class RepositoryView(View):
             repo = Repository(name=repo_name, user=repo_owner)
             repo.set_path()
             repo.save()
-            print('repo path is' + repo.repo_path)
             return self.get(request=request)
         else:
             user = request.user
@@ -128,6 +128,7 @@ class RepositoryFileView(View):
 
 
 class RepositoryManageView(View):
+
     @method_decorator(login_required(login_url='login'))
     def get(self, request, owner_username, repo_name):
         user = request.user
@@ -190,3 +191,31 @@ class RepositoryManageView(View):
                 shutil.rmtree(os.path.join(base, repo.repo_path))
 
             return HttpResponse("deleted")
+
+
+class RepositoryRefreshView(View):
+
+    @method_decorator(login_required(login_url='login'))
+    def get(self, request):
+
+        user = request.user
+        repo_name = request.GET.get("repo_name", "")
+
+        repo = Repository.objects.get(name=repo_name, user=user)
+
+        return JsonResponse(serializers.serialize("json", repo.shared_users.all()), safe=False)
+
+    @method_decorator(login_required(login_url='login'))
+    def post(self, request):
+
+        user = request.user
+        repo_name = request.POST.get("repo_name", "")
+        shared_username = request.POST.get("username", "")
+
+        repo = Repository.objects.get(name=repo_name, user=user)
+        shared_user = UserProfile.objects.get(username=shared_username)
+
+        repo.shared_users.remove(shared_user)
+        repo.save()
+
+        return HttpResponse("removed user")
