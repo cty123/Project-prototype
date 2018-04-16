@@ -214,6 +214,7 @@
 
             // Handler: save dialog close button
             $("#file_save_display_close").click((event) => {
+                $("#file_save_name").val($("#editor_run_filename").val());
                 $("#file_save_display").addClass("u-display-none");
             });
 
