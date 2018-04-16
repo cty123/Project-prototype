@@ -11,7 +11,7 @@
 
     <script src="{% static "jquery/jquery-3.3.1.min.js" %}" type="text/javascript" charset="utf-8"></script>
     <script src="{% static "ace/ace.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "ace-collab-ext.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.0/socket.io.js"></script>
     <style>
         .ace-multi-cursor{
             position: absolute;
@@ -40,21 +40,6 @@
             editor.session.setMode("ace/mode/" + initial_language);
             editor.setFontSize(parseInt(settings.font_size));
             editor.setKeyboardHandler(settings.controls);
-
-            let curMgr = new AceCollabExt.AceMultiCursorManager(editor.getSession());
-
-            function new_Editor(username, color) {
-                curMgr.addCursor(1, "User 1", "orange", {row: 0, column: 0});
-            }
-
-            editor.selection.on('changeCursor', function (){
-                let pos = editor.getCursorPosition();
-                // Broadcast the new position
-            });
-
-            editor.getSession().getDocument().on("change", function(e){
-                console.log(e)
-            });
 
             // Handler: run the code
             $("#editor_run_btn").click(() => {
@@ -248,8 +233,16 @@
                     }
                 }
             });
-        });
 
+            editor.on( "change", function( e ) {
+            // TODO, we could make things more efficient and not likely to conflict by keeping track of change IDs
+            if( last_applied_change!=e && !just_cleared_buffer ) {
+                collaborator.change( JSON.stringify(e) ) ;
+            }
+            just_cleared_buffer = false ;
+            }, false );
+            editor.$blockScrolling = Infinity ;
+        });
         let bind_open_event = () => {
             $(".file_open_item").click((event) => {
                 let load_dialog = $("#file_open_display");
@@ -330,8 +323,50 @@
                 });
             });
         }
+
+        // Sockets
+        var session_id = null ;
+        var collaborator = null ;
+        var buffer_dumped = false ;
+        var last_applied_change = null ;
+        var just_cleared_buffer = null ;
+
+        function Collaborator( session_id ) {
+                this.collaboration_socket = io.connect( "https://127.0.0.1:1337", {query:'session_id=' + session_id} ) ;
+
+                this.collaboration_socket.on( "change", function(delta) {
+                    delta = JSON.parse( delta ) ;
+                    last_applied_change = delta ;
+                    editor.getSession().getDocument().applyDeltas( [delta] ) ;
+                }.bind() ) ;
+
+                this.collaboration_socket.on( "clear_buffer", function() {
+                    just_cleared_buffer = true ;
+                    console.log( "setting editor empty" ) ;
+                    editor.setValue( "" ) ;
+                }.bind() ) ;
+            }
+
+        Collaborator.prototype.change = function( delta ) {
+                this.collaboration_socket.emit( "change", delta ) ;
+            };
+
+        Collaborator.prototype.clear_buffer = function() {
+                this.collaboration_socket.emit( "clear_buffer" ) ;
+            };
+
+        Collaborator.prototype.dump_buffer = function() {
+                this.collaboration_socket.emit( "dump_buffer" ) ;
+        };
+
+        session_id = '{{ owner_username }}' + '_' + '{{ repo_name    }}' ;
+        collaborator = new Collaborator( session_id );
+        collaborator.dump_buffer();
+        last_applied_change = null;
+        just_cleared_buffer = false ;
     </script>
 </head>
+
 <body>
 
     <ul class="c-nav c-nav--inline">

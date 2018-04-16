@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+ 
+        <title>Collaborative Ace Coding!</title>
+ 
+        <style type="text/css" media="screen">
+            #editor {
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+            }
+        </style>
+ 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.0/socket.io.js"></script>
+        <script src="./ace/ace.js" type="text/javascript" charset="utf-8"></script>
+        <script src="ace-builds/src/ext-language_tools.js"></script>
+        <script>
+            var session_id = null ;
+            var editor = null ;
+            var collaborator = null ;
+            var buffer_dumped = false ;
+            var last_applied_change = null ;
+            var just_cleared_buffer = null ;
+ 
+            function Collaborator( session_id ) {
+                this.collaboration_socket = io.connect( "https://127.0.0.1:1337", {query:'session_id=' + session_id} ) ;
+ 
+                this.collaboration_socket.on( "change", function(delta) {
+                    delta = JSON.parse( delta ) ;
+                    last_applied_change = delta ;
+                    editor.getSession().getDocument().applyDeltas( [delta] ) ;
+                }.bind() ) ;
+ 
+                this.collaboration_socket.on( "clear_buffer", function() {
+                    just_cleared_buffer = true ;
+                    console.log( "setting editor empty" ) ;
+                    editor.setValue( "" ) ;
+                }.bind() ) ;
+            }
+ 
+            Collaborator.prototype.change = function( delta ) {
+                this.collaboration_socket.emit( "change", delta ) ;
+            }
+ 
+            Collaborator.prototype.clear_buffer = function() {
+                this.collaboration_socket.emit( "clear_buffer" ) ;
+            }
+ 
+            Collaborator.prototype.dump_buffer = function() {
+                this.collaboration_socket.emit( "dump_buffer" ) ;
+            }
+ 
+            function body_loaded() {
+ 
+                session_id = "meow" ;
+ 
+                editor = ace.edit( "editor" ) ;
+                collaborator = new Collaborator( session_id ) ;
+                 
+ 
+                // registering change callback
+                editor.on( "change", function( e ) {
+                    // TODO, we could make things more efficient and not likely to conflict by keeping track of change IDs
+                    if( last_applied_change!=e && !just_cleared_buffer ) {
+                        collaborator.change( JSON.stringify(e) ) ;
+                    }
+                    just_cleared_buffer = false ;
+                }, false );
+ 
+                editor.setTheme( "ace/theme/monokai") ;
+                editor.$blockScrolling = Infinity ;
+ 
+                collaborator.dump_buffer() ;
+ 
+                document.getElementsByTagName('textarea')[0].focus() ;
+                last_applied_change = null ;
+                just_cleared_buffer = false ;
+            }
+        </script>
+    </head>
+ 
+    <body onLoad="body_loaded()">
+        <div id="editor"></div>
+    </body>
+</html>
