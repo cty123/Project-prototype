@@ -64,11 +64,8 @@
                         $('html, body').animate({
                             scrollTop: output.offset().top
                         }, 1500);
-                        if (output.html() === "") {
-                            output.html(result);
-                        } else {
-                            output.prepend(result + "<br /><hr />");
-                        }
+                        output.prepend(result);
+                        bind_remove_output();
                     }
                 });
             });
@@ -244,6 +241,16 @@
             }, false );
             editor.$blockScrolling = Infinity ;
         });
+
+        let bind_remove_output = () => {
+            let output_close = $(".remove_output");
+            output_close.off("click");
+            output_close.click((event) => {
+                let div = $(event.target).parent().parent().parent();
+                div.hide();
+            });
+        };
+
         let bind_open_event = () => {
             $(".file_open_item").click((event) => {
                 let load_dialog = $("#file_open_display");
