@@ -181,6 +181,7 @@
                 save_dialog.removeClass("u-display-none");
                 let save_message = $("#file_save_success_label");
                 save_message.hide();
+                $("#file_save_name").val($("#editor_run_filename").val());
             });
 
             // Handler: save the file
@@ -214,7 +215,6 @@
 
             // Handler: save dialog close button
             $("#file_save_display_close").click((event) => {
-                $("#file_save_name").val($("#editor_run_filename").val());
                 $("#file_save_display").addClass("u-display-none");
             });
 
@@ -405,7 +405,7 @@
                         <option value="c">C</option>
                         <option value="cpp">C++</option>
                         <option value="java">Java</option>
-                        <!--<option value="python">Python</option>-->
+                        <option value="python">Python</option>
                     </select>
                 </label>
             </div>

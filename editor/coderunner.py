@@ -141,7 +141,7 @@ def run_python(code, filename, flags):
     f.close()
 
     try:
-        compile_output = subprocess.check_output(["python", filename] + flags, timeout=5)
+        compile_output = subprocess.check_output(["python", filename] + flags, stderr=subprocess.STDOUT, timeout=5)
         result.append(["EXECUTION OUTPUT", compile_output])
     except subprocess.TimeoutExpired:
         result.append(["ERROR", "Timeout after 5 seconds"])
