@@ -2,8 +2,7 @@ def format(output):
     """Formats the code output to look nicer."""
 
     result = "<div style=\"margin-bottom: 20px\" class=\"c-card\">"
-    result += "<header class=\"c-card__header\"><h2 class=\"c-heading\">"
-    result += "Output " + str(format.counter)
+    result += "<header class=\"c-card__header\"><h2 class=\"c-heading\">Output"
     result += " <a class=\"remove_output\" style=\"cursor: pointer; color: red\">&times;</a></h2></header>"
     for section in output:
         if section[1] and section[1].strip() != "":
@@ -23,9 +22,4 @@ def format(output):
             result += "</div>"
     result += "</div>"
 
-    format.counter += 1
-
     return result
-
-
-format.counter = 1
