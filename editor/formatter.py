@@ -6,7 +6,7 @@ def format(output):
     result += " <a class=\"remove_output\" style=\"cursor: pointer; color: red\">&times;</a></h2></header>"
     for section in output:
         if section[1] and section[1].strip() != "":
-            result += "<div style=\"margin-top: 10px\" class=\"c-card__item c-card__item--divider "
+            result += "<div style=\"margin-top: 10px; padding-left: 20px\" class=\"c-card__item c-card__item--divider "
             if section[0] == "Execution Output":
                 result += "c-card__item--success"
             elif section[0] == "Compiler Output":
