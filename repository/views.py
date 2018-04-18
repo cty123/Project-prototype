@@ -193,6 +193,28 @@ class RepositoryManageView(View):
 
             return HttpResponse("deleted")
 
+        elif mode == "transfer":
+
+            new_owner_name = request.POST.get("new_owner_name", "")
+
+            try:
+                new_owner = UserProfile.objects.get(username=new_owner_name)
+                repo = Repository.objects.get(name=repo_name, user=request.user)
+                repo.user = new_owner
+                old_path = repo.repo_path
+                repo.set_path()
+                repo.shared_users.add(request.user)
+                repo.shared_users.remove(new_owner)
+                repo.save()
+
+                base = "workspaces/"
+                if os.path.isdir(os.path.join(base, old_path)):
+                    shutil.move(os.path.join(base, old_path), os.path.join(base, repo.repo_path))
+
+                return HttpResponse("transferred")
+            except UserProfile.DoesNotExist:
+                return HttpResponse("User \"" + new_owner_name + "\" does not exist")
+
 
 class RepositoryRefreshView(View):
 

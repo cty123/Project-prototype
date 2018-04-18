@@ -14,8 +14,10 @@
         $(document).ready(() => {
             let rename_label = $("#repository_rename_label");
             let sharing_label = $("#repository_sharing_label");
+            let transfer_label = $("#repository_transfer_label");
             rename_label.hide();
             sharing_label.hide();
+            transfer_label.hide();
 
             // Handler: share repository
             $("#repository_sharing_button").click(() => {
@@ -67,6 +69,29 @@
                         } else {
                             rename_label.show();
                             rename_label.text(result);
+                        }
+                    }
+                });
+            });
+
+            // Handler: transfer repository
+            $("#repository_transfer_button").click(() => {
+                let new_owner_name = $("#repository_transfer").val();
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'manage_post' %}",
+                    data: {
+                        "mode": "transfer",
+                        "repo_name": "{{ repo_name }}",
+                        "user": "{{ user }}",
+                        "new_owner_name": new_owner_name
+                    },
+                    success: (result) => {
+                        if (result === "transferred") {
+                            window.location.replace("{% url 'files' %}");
+                        } else {
+                            transfer_label.show();
+                            transfer_label.text(result);
                         }
                     }
                 });
@@ -215,6 +240,20 @@
         </div>
 
         <div class="c-alert c-alert--success" style="margin-top: 20px" id="repository_rename_label"></div>
+
+        <h3>Transfer repository ownership</h3>
+
+        <p>Transferring ownership to another user will allow them to share, rename, and delete the repository. While you will lose these abilities,
+           you will still have normal contributor access.</p>
+
+        <div class="c-input-group">
+            <div class="o-field">
+                <input id="repository_transfer" class="c-field" placeholder="Username" />
+            </div>
+            <button id="repository_transfer_button" class="c-button c-button--success">Transfer ownership</button>
+        </div>
+
+        <div class="c-alert c-alert--success" style="margin-top: 20px" id="repository_transfer_label"></div>
 
         <h3>Delete repository</h3>
 
