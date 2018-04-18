@@ -56,7 +56,16 @@ class RepositoryView(View):
     @method_decorator(login_required(login_url='login'))
     def post(self, request):
         repo_owner = request.user
+        repo_user = request.POST.get("repo_user", "")
         repo_name = request.POST.get("repo_name", "")
+        mode = request.POST.get("mode", "")
+
+        if mode == "leave":
+            owner = UserProfile.objects.get(username=repo_user)
+            repo = Repository.objects.get(name=repo_name)
+            repo.shared_users.remove(request.user)
+            repo.save()
+            return HttpResponse("removed")
 
         # sanitize the repo name
         repo_name = repo_name.replace(" ", "_")
