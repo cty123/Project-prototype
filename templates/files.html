@@ -68,7 +68,19 @@
             <p>Select a repository to start coding.</p>
             <ul>
                 {% for shared_repo in shared_repos %}
-                    <li><a class="c-link" href={% url 'e' shared_repo.user.username shared_repo.name %}>{{ shared_repo.name }}</a> - shared by {{ shared_repo.user.nick_name }} ({{ shared_repo.user.username }})</li>
+                    <li><a class="c-link" href={% url 'e' shared_repo.user.username shared_repo.name %}>{{ shared_repo.name }}</a> - shared by {{ shared_repo.user.nick_name }} ({{ shared_repo.user.username }})
+                    {% if shared_repo.shared_users.all|length > 2 %}
+                    <ul>
+                        <li>Other contributors:<ul></li>
+                        {% for shared_user in shared_repo.shared_users.all %}
+                            {% if shared_user.username != shared_repo.user.username and shared_user.username != user.username %}
+                                <li>{{ shared_user.nick_name }} ({{ shared_user.username }})</li>
+                            {% endif %}
+                        {% endfor %}
+                        </ul>
+                    </ul>
+                    {% endif %}
+                    </li>
                 {% endfor %}
             </ul>
         {% else %}
