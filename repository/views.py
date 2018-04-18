@@ -24,6 +24,9 @@ class RepositorySharingView(View):
         if not owner_username == user.username:
             return HttpResponse("You must be the owner of a repository to share it with another user!")
 
+        if owner_username == shared_username:
+            return HttpResponse("You are already the owner of this repository")
+
         try:
             repo = Repository.objects.get(name=repo_name, user=user)
             shared_user = UserProfile.objects.get(username=shared_username)
