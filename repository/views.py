@@ -40,7 +40,7 @@ class RepositorySharingView(View):
         except Repository.DoesNotExist:
             return HttpResponse("Repository \"" + repo_name + "\" does not exist")
 
-        return HttpResponse("Repository \"" + repo_name + "\" is now shared with " + shared_username)
+        return HttpResponse("Repository \"" + repo_name + "\" is now shared with " + shared_user.nick_name + " (" + shared_username + ")")
 
 
 class RepositoryView(View):
