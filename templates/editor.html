@@ -278,6 +278,8 @@
                             lang = "cpp";
                         } else if (filename.endsWith(".java")) {
                             lang = "java";
+                        } else if (filename.endsWith(".py")) {
+                            lang = "python"
                         }
                         $("#editor_control_language").val(lang);
                         let ace_language;
