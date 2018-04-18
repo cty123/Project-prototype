@@ -37,8 +37,16 @@ class ProfileView(View):
     @method_decorator(login_required(login_url='login'))
     def post(self, request):
         nick_name = request.POST.get("nickname", "")
+        email = request.POST.get("email", "")
+        password = request.POST.get("password", "")
+        password_confirm = request.POST.get("password_confirm", "")
         user = request.user
-        user.nick_name = nick_name
+        if nick_name.strip() != "":
+            user.nick_name = nick_name.strip()
+        if email.strip() != "":
+            user.email = email.strip()
+        #if password.strip() != "" and password == password_confirm:
+        #    user.password = password
         user.save()
         return render(request, 'profile.html', {})
 
