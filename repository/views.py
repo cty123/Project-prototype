@@ -73,7 +73,9 @@ class RepositoryView(View):
             user = request.user
             repos = Repository.objects.filter(user=user)
             repos = repos.extra(order_by=["name"])
-            return render(request, 'files.html', {'repos': repos, 'err_msg': 'Repository "' + repo_name + '" already exists'})
+            shared_repos = Repository.objects.filter(shared_users=user)
+            shared_repos = shared_repos.extra(order_by=["name"])
+            return render(request, 'files.html', {'repos': repos, 'shared_repos': shared_repos, 'err_msg': 'Repository "' + repo_name + '" already exists'})
 
 
 class RepositoryFileView(View):
