@@ -30,9 +30,9 @@ def run_c(code, filename, flags):
 
     if os.path.isfile(executable):
         try:
-            run_output = subprocess.check_output(["../../fssb", "--", "./" + executable] + flags, stderr=subprocess.STDOUT, timeout=5)
+            run_output = subprocess.check_output(["timeout", "--signal=SIGKILL", "5s", "../../fssb", "--", "./" + executable] + flags, stderr=subprocess.STDOUT)
             result.append(["Execution Output", run_output])
-        except subprocess.TimeoutExpired:
+        except subprocess.CalledProcessError as e:
             result.append(["Error", "Timeout after 5 seconds"])
 
     # clean up
@@ -71,9 +71,9 @@ def run_cpp(code, filename, flags):
 
     if os.path.isfile(executable):
         try:
-            run_output = subprocess.check_output(["../../fssb", "--", "./" + executable] + flags, stderr=subprocess.STDOUT, timeout=5)
+            run_output = subprocess.check_output(["timeout", "--signal=SIGKILL", "5s", "../../fssb", "--", "./" + executable] + flags, stderr=subprocess.STDOUT)
             result.append(["Execution Output", run_output])
-        except subprocess.TimeoutExpired:
+        except subprocess.CalledProcessError as e:
             result.append(["Error", "Timeout after 5 seconds"])
 
     # clean up
@@ -112,9 +112,9 @@ def run_java(code, filename, flags):
 
     if os.path.isfile(executable + ".class"):
         try:
-            run_output = subprocess.check_output(["../../fssb", "--", "java", executable] + flags, stderr=subprocess.STDOUT, timeout=5)
+            run_output = subprocess.check_output(["timeout", "--signal=SIGKILL", "5s", "../../fssb", "--", "java", executable] + flags, stderr=subprocess.STDOUT)
             result.append(["Execution Output", run_output])
-        except subprocess.TimeoutExpired:
+        except subprocess.CalledProcessError as e:
             result.append(["Error", "Timeout after 5 seconds"])
 
     # clean up
@@ -141,12 +141,10 @@ def run_python(code, filename, flags):
     f.close()
 
     try:
-        compile_output = subprocess.check_output(["../../fssb", "--", "python", filename] + flags, stderr=subprocess.STDOUT, timeout=5)
+        compile_output = subprocess.check_output(["timeout", "--signal=SIGKILL", "5s", "../../fssb", "--", "python", filename] + flags, stderr=subprocess.STDOUT)
         result.append(["Execution Output", compile_output])
-    except subprocess.TimeoutExpired:
-        result.append(["Error", "Timeout after 5 seconds"])
     except subprocess.CalledProcessError as e:
-        result.append(["Execution Output", e.output])
+        result.append(["Error", "Timeout after 5 seconds"])
 
     # clean up
     if generated_name:
