@@ -30,7 +30,7 @@ def run_c(code, filename, flags):
 
     if os.path.isfile(executable):
         try:
-            run_output = subprocess.check_output(["./" + executable] + flags, stderr=subprocess.STDOUT, timeout=5)
+            run_output = subprocess.check_output(["../../fssb", "--", "./" + executable] + flags, stderr=subprocess.STDOUT, timeout=5)
             result.append(["Execution Output", run_output])
         except subprocess.TimeoutExpired:
             result.append(["Error", "Timeout after 5 seconds"])
@@ -71,7 +71,7 @@ def run_cpp(code, filename, flags):
 
     if os.path.isfile(executable):
         try:
-            run_output = subprocess.check_output(["./" + executable] + flags, stderr=subprocess.STDOUT, timeout=5)
+            run_output = subprocess.check_output(["../../fssb", "--", "./" + executable] + flags, stderr=subprocess.STDOUT, timeout=5)
             result.append(["Execution Output", run_output])
         except subprocess.TimeoutExpired:
             result.append(["Error", "Timeout after 5 seconds"])
@@ -112,7 +112,7 @@ def run_java(code, filename, flags):
 
     if os.path.isfile(executable + ".class"):
         try:
-            run_output = subprocess.check_output(["java", executable] + flags, stderr=subprocess.STDOUT, timeout=5)
+            run_output = subprocess.check_output(["../../fssb", "--", "java", executable] + flags, stderr=subprocess.STDOUT, timeout=5)
             result.append(["Execution Output", run_output])
         except subprocess.TimeoutExpired:
             result.append(["Error", "Timeout after 5 seconds"])
@@ -141,7 +141,7 @@ def run_python(code, filename, flags):
     f.close()
 
     try:
-        compile_output = subprocess.check_output(["python", filename] + flags, stderr=subprocess.STDOUT, timeout=5)
+        compile_output = subprocess.check_output(["../../fssb", "--", "python", filename] + flags, stderr=subprocess.STDOUT, timeout=5)
         result.append(["Execution Output", compile_output])
     except subprocess.TimeoutExpired:
         result.append(["Error", "Timeout after 5 seconds"])

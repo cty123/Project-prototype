@@ -16,9 +16,10 @@ def format(output):
             result += "\">" + section[0] + "</div>"
             result += "<div class=\"c-card__body\">"
             try:
-                result += "<pre class=\"c-code c-code--multiline\">" + str(section[1], "utf-8").strip() + "</pre>"
+                section[1] = str(section[1], "utf-8").strip()
             except:
-                result += "<pre class=\"c-code c-code--multiline\">" + section[1].strip() + "</pre>"
+                section[1] = section[1].strip()
+            result += "<pre class=\"c-code c-code--multiline\">" + section[1] + "</pre>"
             result += "</div>"
     result += "</div>"
 
