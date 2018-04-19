@@ -16,6 +16,8 @@ Technologies used:
 * node.js
 * Blaze UI
 * Ace editor
+* Jquery
+* Fssb(Linux sandbox: https://github.com/adtac/fssb)
 
 ## Contributors
 
