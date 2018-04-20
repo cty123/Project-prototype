@@ -15,7 +15,9 @@ Technologies used:
 * Django
 * node.js
 * Blaze UI
-* Ace editor
+* Ace editor(https://github.com/ajaxorg/ace)
+* Jquery
+* Fssb(Linux sandbox: https://github.com/adtac/fssb)
 
 ## Contributors
 

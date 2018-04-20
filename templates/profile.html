@@ -56,6 +56,11 @@
                     </div>
                 </form>
             </div>
+            {% if msg|length != 0%}
+            <div class="c-alert c-alert--error" style="margin-top: 20px" id="login_error_label">
+                            {{ msg }}
+            </div>
+            {% endif %}
         </div>
     </div>
 
