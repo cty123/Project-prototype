@@ -102,6 +102,9 @@ class EditorView(View):
         flags = request.POST.get("flags")
         path = request.POST.get("path")
 
+        if code.strip() == "":
+            return HttpResponse(format([["Error", "No code entered"]]))
+
         current_dir = os.path.dirname(os.path.realpath(__file__))
         base_dir = os.path.dirname(current_dir)
 
