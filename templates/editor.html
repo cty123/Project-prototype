@@ -6,6 +6,7 @@
     <link rel="shortcut icon" href="{%  static 'favicon.ico' %}" />
     <link rel="stylesheet" href="https://unpkg.com/blaze@4.0.0-6/scss/dist/blaze.min.css" />
     <link rel="stylesheet" href="{% static "css/editor.css" %}" />
+    <link rel="stylesheet" href="{% static "css/loadawesome.css" %}" />
 
     <script src="{% static "js/storage.js" %}" type="text/javascript" charset="utf-8"></script>
 
@@ -30,6 +31,9 @@
             $("#editor_control_size").val(settings.font_size);
             $("#editor_control_keybindings").val(settings.controls);
 
+            let loading_animation = $("#loading_animation");
+            loading_animation.hide();
+
             let initial_language = settings.language;
             if (initial_language === "c" || initial_language === "cpp") {
                 initial_language = "c_cpp";
@@ -42,12 +46,16 @@
             editor.setKeyboardHandler(settings.controls);
 
             // Handler: run the code
-            $("#editor_run_btn").click(() => {
+            $("#editor_run_btn").click((event) => {
+                let run_button = $(event.target);
                 let text = editor.getValue();
                 let language = $("#editor_control_language").val();
                 let filename = $("#editor_run_filename").val();
                 let flags = $("#editor_run_args").val();
                 let path = '{{ path }}';
+
+                loading_animation.show();
+                run_button.prop("disabled", true);
 
                 $.ajax({
                     type: "POST",
@@ -60,6 +68,8 @@
                         "path": path
                     },
                     success: (result) => {
+                        loading_animation.hide();
+                        run_button.prop("disabled", false);
                         let output = $("#output");
                         $('html, body').animate({
                             scrollTop: output.offset().top
@@ -496,6 +506,16 @@
                 <input type="text" class="c-field" placeholder="(optional) command line arguments" name="editor_run_args" id="editor_run_args"/>
             </div>
             <input type="button" class="c-button c-button--success" name="editor_run_btn" id="editor_run_btn" value="Run program!" />
+        </div>
+
+        <div id="loading_animation" style="margin: 40px 20px 20px;" class="u-center-block">
+            <div class="u-center-block__content la-ball-running-dots la-dark la-3x">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
         </div>
 
         <p id="output" name="output"></p>
