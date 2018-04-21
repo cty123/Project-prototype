@@ -9,15 +9,6 @@
 
     <script src="{% static "jquery/jquery-3.3.1.min.js" %}" type="text/javascript" charset="utf-8"></script>
     <style type="text/css">
-        #intro_box {
-            align-items: center;
-            display: flex;
-            justify-content: center;
-            flex-direction: column;
-            height: 100vh;
-        }
-    </style>
-    <style>
         #myVideo {
             position: fixed;
             right: 0;
@@ -25,15 +16,29 @@
             min-width: 100%;
             min-height: 100%;
         }
+
+        .content {
+            align-items: center;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            height: 100vh;
+            position: fixed;
+            color: #f1262e;
+            background: rgba(0, 0, 0, 0.5);
+            bottom: 0;
+            width: 100%;
+            padding: 20px;
+        }
     </style>
 </head>
 <body>
     <video autoplay muted loop id="myVideo">
             <source src="videos/background.mp4" type="video/mp4">
     </video>
-    <div id="intro_box">
-        <img src="{% static 'logo.png' %}" />
-        <p style="text-align: center">Prototype Editor is an online text editor with code compilation and execution.<br />Work on your own projects
+    <div class="content">
+        <img src="{% static 'logo.png' %}" align="center"/>
+        <p style="text-align: center" >Prototype Editor is an online text editor with code compilation and execution.<br />Work on your own projects
            or share code and collaborate with friends.</p>
         <p><a href="{% url 'profile' %}"><button class="c-button c-button--success" style="padding-left:20px;padding-right:20px">Get started</button></a></p>
     </div>
