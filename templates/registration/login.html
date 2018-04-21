@@ -19,68 +19,91 @@
             }
         });
     </script>
+
+    <style>
+        #myVideo {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+        }
+
+        .content {
+            position: fixed;
+            top: 0;
+            background: rgba(0, 0, 0, 0.5);
+            color: #f1f1f1;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
 </head>
 <body>
+    <video autoplay muted loop id="myVideo">
+        <source src="login.mp4" type="video/mp4">
+    </video>
+    <div class="content">
+        <ul class="c-nav c-nav--inline">
+            <li class="c-nav__item">Prototype Editor</li>
+            <a href="{% url 'files' %}"><li class="c-nav__item">Files</li></a>
+            <a href="{% url 'profile' %}"><li class="c-nav__item">Profile</li></a>
+            <a href="{% url 'logout' %}"><li class="c-nav__item c-nav__item--right">Logout</li></a>
+            <a href="{% url 'login' %}"><li class="c-nav__item c-nav__item--right">Login/Register</li></a>
+        </ul>
 
-    <ul class="c-nav c-nav--inline">
-        <li class="c-nav__item">Prototype Editor</li>
-        <a href="{% url 'files' %}"><li class="c-nav__item">Files</li></a>
-        <a href="{% url 'profile' %}"><li class="c-nav__item">Profile</li></a>
-        <a href="{% url 'logout' %}"><li class="c-nav__item c-nav__item--right">Logout</li></a>
-        <a href="{% url 'login' %}"><li class="c-nav__item c-nav__item--right">Login/Register</li></a>
-    </ul>
-
-    <div class="o-grid" id="body_login">
-        <div class="o-grid__cell">
-            <div class="o-grid-text">
-                <h1>Login</h1>
-                <form method="post" action={% url 'login' %}>
-                    {% csrf_token %}
-                    <div class="c-input-group c-input-group--stacked">
-                        <div class="o-field">
-                            <input name="username" type="text" class="c-field" placeholder="Username">
+        <div class="o-grid" id="body_login">
+            <div class="o-grid__cell">
+                <div class="o-grid-text">
+                    <h1>Login</h1>
+                    <form method="post" action={% url 'login' %}>
+                        {% csrf_token %}
+                        <div class="c-input-group c-input-group--stacked">
+                            <div class="o-field">
+                                <input name="username" type="text" class="c-field" placeholder="Username">
+                            </div>
+                            <div class="o-field">
+                                <input name="password" type="password" class="c-field" placeholder="Password">
+                            </div>
+                            <div class="o-field">
+                                <button style="width: 100%" class="c-button c-button--success" type="submit">Login</button>
+                            </div>
                         </div>
-                        <div class="o-field">
-                            <input name="password" type="password" class="c-field" placeholder="Password">
-                        </div>
-                        <div class="o-field">
-                            <button style="width: 100%" class="c-button c-button--success" type="submit">Login</button>
-                        </div>
+                    </form>
+                    <div class="c-alert c-alert--error" style="margin-top: 20px" id="login_error_label">
+                        {{ msg }}
                     </div>
-                </form>
-                <div class="c-alert c-alert--error" style="margin-top: 20px" id="login_error_label">
-                    {{ msg }}
                 </div>
             </div>
-        </div>
-        <div class="o-grid__cell">
-            <div class="o-grid-text">
-                <h1>Register</h1>
-                <form enctype="multipart/form-data" method="post" action={% url 'register' %}>
-                    {% csrf_token %}
-                    <div class="c-input-group c-input-group--stacked">
-                        <div class="o-field">
-                            <input name="username" type="text" class="c-field" placeholder="Username">
+            <div class="o-grid__cell">
+                <div class="o-grid-text">
+                    <h1>Register</h1>
+                    <form enctype="multipart/form-data" method="post" action={% url 'register' %}>
+                        {% csrf_token %}
+                        <div class="c-input-group c-input-group--stacked">
+                            <div class="o-field">
+                                <input name="username" type="text" class="c-field" placeholder="Username">
+                            </div>
+                            <div class="o-field">
+                                <input name="nickname" type="text" class="c-field" placeholder="Nickname">
+                            </div>
+                            <div class="o-field">
+                                <input name="password" type="password" class="c-field" placeholder="Password">
+                            </div>
+                            <div class="o-field">
+                                <input name="password_repeat" type="password" class="c-field" placeholder="Repeat password">
+                            </div>
+                            <div class="o-field">
+                                <input name="email" type="email" class="c-field" placeholder="Email">
+                            </div>
+                            <div class="o-field">
+                                <button style="width: 100%" class="c-button c-button--success" type="submit">Register</button>
+                            </div>
                         </div>
-                        <div class="o-field">
-                            <input name="nickname" type="text" class="c-field" placeholder="Nickname">
-                        </div>
-                        <div class="o-field">
-                            <input name="password" type="password" class="c-field" placeholder="Password">
-                        </div>
-                        <div class="o-field">
-                            <input name="password_repeat" type="password" class="c-field" placeholder="Repeat password">
-                        </div>
-                        <div class="o-field">
-                            <input name="email" type="email" class="c-field" placeholder="Email">
-                        </div>
-                        <div class="o-field">
-                            <button style="width: 100%" class="c-button c-button--success" type="submit">Register</button>
-                        </div>
+                    </form>
+                    <div class="c-alert c-alert--success" style="margin-top: 20px" id="login_success_label">
+                        {{ reg_msg }}
                     </div>
-                </form>
-                <div class="c-alert c-alert--success" style="margin-top: 20px" id="login_success_label">
-                    {{ reg_msg }}
                 </div>
             </div>
         </div>
