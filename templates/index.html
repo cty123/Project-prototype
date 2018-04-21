@@ -17,8 +17,20 @@
             height: 100vh;
         }
     </style>
+    <style>
+        #myVideo {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+        }
+    </style>
 </head>
 <body>
+    <video autoplay muted loop id="myVideo">
+            <source src="videos/background.mp4" type="video/mp4">
+    </video>
     <div id="intro_box">
         <img src="{% static 'logo.png' %}" />
         <p style="text-align: center">Prototype Editor is an online text editor with code compilation and execution.<br />Work on your own projects
