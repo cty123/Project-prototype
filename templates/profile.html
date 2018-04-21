@@ -57,11 +57,19 @@
                             <input name="password" type="password" class="c-field" placeholder="Password">
                         </div>
                         <div class="o-field">
+                            <input name="password_confirm" type="password" class="c-field" placeholder="Repeat password">
+                        </div>
+                        <div class="o-field">
                             <button style="width: 100%" class="c-button c-button--success" type="submit">Save</button>
                         </div>
                     </div>
                 </form>
             </div>
+            {% if msg|length != 0%}
+            <div class="c-alert c-alert--error" style="margin-top: 20px" id="login_error_label">
+                            {{ msg }}
+            </div>
+            {% endif %}
         </div>
     </div>
 

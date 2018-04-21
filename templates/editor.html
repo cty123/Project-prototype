@@ -6,6 +6,7 @@
     <link rel="shortcut icon" href="{%  static 'favicon.ico' %}" />
     <link rel="stylesheet" href="https://unpkg.com/blaze@4.0.0-6/scss/dist/blaze.min.css" />
     <link rel="stylesheet" href="{% static "css/editor.css" %}" />
+    <link rel="stylesheet" href="{% static "css/loadawesome.css" %}" />
 
     <script src="{% static "js/storage.js" %}" type="text/javascript" charset="utf-8"></script>
 
@@ -30,6 +31,9 @@
             $("#editor_control_size").val(settings.font_size);
             $("#editor_control_keybindings").val(settings.controls);
 
+            let loading_animation = $("#loading_animation");
+            loading_animation.hide();
+
             let initial_language = settings.language;
             if (initial_language === "c" || initial_language === "cpp") {
                 initial_language = "c_cpp";
@@ -42,12 +46,16 @@
             editor.setKeyboardHandler(settings.controls);
 
             // Handler: run the code
-            $("#editor_run_btn").click(() => {
+            $("#editor_run_btn").click((event) => {
+                let run_button = $(event.target);
                 let text = editor.getValue();
                 let language = $("#editor_control_language").val();
                 let filename = $("#editor_run_filename").val();
                 let flags = $("#editor_run_args").val();
                 let path = '{{ path }}';
+
+                loading_animation.show();
+                run_button.prop("disabled", true);
 
                 $.ajax({
                     type: "POST",
@@ -60,15 +68,14 @@
                         "path": path
                     },
                     success: (result) => {
+                        loading_animation.hide();
+                        run_button.prop("disabled", false);
                         let output = $("#output");
                         $('html, body').animate({
                             scrollTop: output.offset().top
                         }, 1500);
-                        if (output.html() === "") {
-                            output.html(result);
-                        } else {
-                            output.prepend(result + "<br /><hr />");
-                        }
+                        output.prepend(result);
+                        bind_remove_output();
                     }
                 });
             });
@@ -181,6 +188,7 @@
                 save_dialog.removeClass("u-display-none");
                 let save_message = $("#file_save_success_label");
                 save_message.hide();
+                $("#file_save_name").val($("#editor_run_filename").val());
             });
 
             // Handler: save the file
@@ -214,7 +222,6 @@
 
             // Handler: save dialog close button
             $("#file_save_display_close").click((event) => {
-                $("#file_save_name").val($("#editor_run_filename").val());
                 $("#file_save_display").addClass("u-display-none");
             });
 
@@ -244,6 +251,16 @@
             }, false );
             editor.$blockScrolling = Infinity ;
         });
+
+        let bind_remove_output = () => {
+            let output_close = $(".remove_output");
+            output_close.off("click");
+            output_close.click((event) => {
+                let div = $(event.target).parent().parent().parent();
+                div.hide();
+            });
+        };
+
         let bind_open_event = () => {
             $(".file_open_item").click((event) => {
                 let load_dialog = $("#file_open_display");
@@ -271,6 +288,8 @@
                             lang = "cpp";
                         } else if (filename.endsWith(".java")) {
                             lang = "java";
+                        } else if (filename.endsWith(".py")) {
+                            lang = "python"
                         }
                         $("#editor_control_language").val(lang);
                         let ace_language;
@@ -405,7 +424,7 @@
                         <option value="c">C</option>
                         <option value="cpp">C++</option>
                         <option value="java">Java</option>
-                        <!--<option value="python">Python</option>-->
+                        <option value="python">Python</option>
                     </select>
                 </label>
             </div>
@@ -487,6 +506,16 @@
                 <input type="text" class="c-field" placeholder="(optional) command line arguments" name="editor_run_args" id="editor_run_args"/>
             </div>
             <input type="button" class="c-button c-button--success" name="editor_run_btn" id="editor_run_btn" value="Run program!" />
+        </div>
+
+        <div id="loading_animation" style="margin: 40px 20px 20px;" class="u-center-block">
+            <div class="u-center-block__content la-ball-running-dots la-dark la-3x">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
         </div>
 
         <p id="output" name="output"></p>

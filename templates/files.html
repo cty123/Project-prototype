@@ -9,10 +9,41 @@
 
     <script src="{% static "jquery/jquery-3.3.1.min.js" %}" type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript">
+        let csrftoken;
         $(document).ready(() => {
             if (!"{{ err_msg }}") {
                 $("#repo_error_label").hide()
             }
+
+            $(".leave_repo").click(event => {
+                let elem = $(event.target);
+                let repo_user = elem.data("repo-user");
+                let repo_name = elem.data("repo-name");
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'files' %}",
+                    data: {
+                        "mode": "leave",
+                        "repo_name": repo_name,
+                        "repo_user": repo_user,
+                    },
+                    success: (result) => {
+                        window.location.reload(true);
+                    }
+                });
+            });
+
+            let csrfSafeMethod = (method) =>{
+                // these HTTP methods do not require CSRF protection
+                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+            };
+            $.ajaxSetup({
+                beforeSend: (xhr, settings) => {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                }
+            });
         });
     </script>
 </head>
@@ -68,7 +99,20 @@
             <p>Select a repository to start coding.</p>
             <ul>
                 {% for shared_repo in shared_repos %}
-                    <li><a class="c-link" href={% url 'e' shared_repo.user.username shared_repo.name %}>{{ shared_repo.name }}</a> - shared by {{ shared_repo.user.nick_name }} ({{ shared_repo.user.username }})</li>
+                    <li><a class="c-link" href={% url 'e' shared_repo.user.username shared_repo.name %}>{{ shared_repo.name }}</a> - shared by {{ shared_repo.user.nick_name }} ({{ shared_repo.user.username }})
+                    <a class="leave_repo" style="cursor: pointer; color: red" data-repo-user="{{ shared_repo.user.username }}" data-repo-name="{{ shared_repo.name }}">&times;</a>
+                    {% if shared_repo.shared_users.all|length > 2 %}
+                    <ul>
+                        <li>Other contributors:<ul></li>
+                        {% for shared_user in shared_repo.shared_users.all %}
+                            {% if shared_user.username != shared_repo.user.username and shared_user.username != user.username %}
+                                <li>{{ shared_user.nick_name }} ({{ shared_user.username }})</li>
+                            {% endif %}
+                        {% endfor %}
+                        </ul>
+                    </ul>
+                    {% endif %}
+                    </li>
                 {% endfor %}
             </ul>
         {% else %}
@@ -76,6 +120,7 @@
         {% endif %}
     </div>
 
+    {% csrf_token %}
     <script type="text/javascript">
         // using jQuery
         csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();

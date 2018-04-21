@@ -4,9 +4,10 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password
 from django.views.generic import View
-from users.forms import RegisterForm
+from users.forms import RegisterForm, UpdateForm
 from users.models import UserProfile
 from django.shortcuts import redirect
+from django.http.response import HttpResponseRedirect
 # Create your views here.
 
 
@@ -36,11 +37,25 @@ class ProfileView(View):
 
     @method_decorator(login_required(login_url='login'))
     def post(self, request):
-        nick_name = request.POST.get("nickname", "")
+        # Update user profile
+        # Get acting user
         user = request.user
-        user.nick_name = nick_name
-        user.save()
-        return render(request, 'profile.html', {})
+        form = UpdateForm(request.POST)
+        # Get update data
+        if form.is_valid():
+            nickname = form.cleaned_data["nickname"]
+            password = form.cleaned_data["password"]
+            email = form.cleaned_data["email"]
+            if not nickname == "":
+                user.nick_name = nickname
+            if not email == "":
+                user.email = email
+            if not user.password == make_password(password=password):
+                user.password = make_password(password=password)
+            user.save()
+            return HttpResponseRedirect('/profile/')
+        else:
+            return render(request, 'profile.html', {"msg": form.errors})
 
 
 class LogoutView(View):
@@ -70,7 +85,6 @@ class RegisterView(View):
             user_profile.save()
             return render(request, 'registration/login.html', {'reg_msg': 'Account created, please login!'})
         else:
-            print(register_form.errors)
             return render(request, 'registration/login.html', {'reg_msg': register_form.errors})
 
 

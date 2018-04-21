@@ -1,6 +1,7 @@
 from django import forms
 from users.models import UserProfile
 
+
 class RegisterForm(forms.Form):
     username = forms.CharField(required=True)
     password = forms.CharField(required=True, min_length=6)
@@ -27,3 +28,22 @@ class RegisterForm(forms.Form):
             raise forms.ValidationError(
                 "User already exist"
             )
+
+
+class UpdateForm(forms.Form):
+    password = forms.CharField(required=True, min_length=6)
+    password_confirm = forms.CharField(required=True, min_length=6)
+    email = forms.EmailField(required=False)
+    nickname = forms.CharField(required=False)
+
+    def clean(self):
+        cleaned_data = super(UpdateForm, self).clean()
+        password = cleaned_data.get("password")
+        confirm_password = cleaned_data.get("password_confirm")
+
+        if password != confirm_password:
+            raise forms.ValidationError(
+                "password and confirm_password does not match"
+            )
+
+        return cleaned_data

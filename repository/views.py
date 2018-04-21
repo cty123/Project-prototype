@@ -24,6 +24,9 @@ class RepositorySharingView(View):
         if not owner_username == user.username:
             return HttpResponse("You must be the owner of a repository to share it with another user!")
 
+        if owner_username == shared_username:
+            return HttpResponse("You are already the owner of this repository")
+
         try:
             repo = Repository.objects.get(name=repo_name, user=user)
             shared_user = UserProfile.objects.get(username=shared_username)
@@ -37,7 +40,7 @@ class RepositorySharingView(View):
         except Repository.DoesNotExist:
             return HttpResponse("Repository \"" + repo_name + "\" does not exist")
 
-        return HttpResponse("Repository \"" + repo_name + "\" is now shared with " + shared_username)
+        return HttpResponse("Repository \"" + repo_name + "\" is now shared with " + shared_user.nick_name + " (" + shared_username + ")")
 
 
 class RepositoryView(View):
@@ -53,7 +56,16 @@ class RepositoryView(View):
     @method_decorator(login_required(login_url='login'))
     def post(self, request):
         repo_owner = request.user
+        repo_user = request.POST.get("repo_user", "")
         repo_name = request.POST.get("repo_name", "")
+        mode = request.POST.get("mode", "")
+
+        if mode == "leave":
+            owner = UserProfile.objects.get(username=repo_user)
+            repo = Repository.objects.get(name=repo_name)
+            repo.shared_users.remove(request.user)
+            repo.save()
+            return HttpResponse("removed")
 
         # sanitize the repo name
         repo_name = repo_name.replace(" ", "_")
@@ -70,7 +82,9 @@ class RepositoryView(View):
             user = request.user
             repos = Repository.objects.filter(user=user)
             repos = repos.extra(order_by=["name"])
-            return render(request, 'files.html', {'repos': repos, 'err_msg': 'Repository "' + repo_name + '" already exists'})
+            shared_repos = Repository.objects.filter(shared_users=user)
+            shared_repos = shared_repos.extra(order_by=["name"])
+            return render(request, 'files.html', {'repos': repos, 'shared_repos': shared_repos, 'err_msg': 'Repository "' + repo_name + '" already exists'})
 
 
 class RepositoryFileView(View):
@@ -192,6 +206,28 @@ class RepositoryManageView(View):
                 shutil.rmtree(os.path.join(base, repo.repo_path))
 
             return HttpResponse("deleted")
+
+        elif mode == "transfer":
+
+            new_owner_name = request.POST.get("new_owner_name", "")
+
+            try:
+                new_owner = UserProfile.objects.get(username=new_owner_name)
+                repo = Repository.objects.get(name=repo_name, user=request.user)
+                repo.user = new_owner
+                old_path = repo.repo_path
+                repo.set_path()
+                repo.shared_users.add(request.user)
+                repo.shared_users.remove(new_owner)
+                repo.save()
+
+                base = "workspaces/"
+                if os.path.isdir(os.path.join(base, old_path)):
+                    shutil.move(os.path.join(base, old_path), os.path.join(base, repo.repo_path))
+
+                return HttpResponse("transferred")
+            except UserProfile.DoesNotExist:
+                return HttpResponse("User \"" + new_owner_name + "\" does not exist")
 
 
 class RepositoryRefreshView(View):
