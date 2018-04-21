@@ -70,6 +70,9 @@
                     <li>
                         <a class="c-link" href="{% url 'e' user.username repo.name %}">{{ repo.name }}</a>
                         <a class="c-link" style="color: #4caf50" href="{% url 'manage' user.username repo.name %}">(manage)</a>
+                        <ul>
+                            <li>Created on {{ repo.date }}</li>
+                        </ul>
                     </li>
                 {% endfor %}
             </ul>
@@ -101,8 +104,8 @@
                 {% for shared_repo in shared_repos %}
                     <li><a class="c-link" href={% url 'e' shared_repo.user.username shared_repo.name %}>{{ shared_repo.name }}</a> - shared by {{ shared_repo.user.nick_name }} ({{ shared_repo.user.username }})
                     <a class="leave_repo" style="cursor: pointer; color: red" data-repo-user="{{ shared_repo.user.username }}" data-repo-name="{{ shared_repo.name }}">&times;</a>
-                    {% if shared_repo.shared_users.all|length > 2 %}
                     <ul>
+                    {% if shared_repo.shared_users.all|length > 2 %}
                         <li>Other contributors:<ul></li>
                         {% for shared_user in shared_repo.shared_users.all %}
                             {% if shared_user.username != shared_repo.user.username and shared_user.username != user.username %}
@@ -110,9 +113,9 @@
                             {% endif %}
                         {% endfor %}
                         </ul>
-                    </ul>
                     {% endif %}
-                    </li>
+                        <li>Created on {{ shared_repo.date }}</li>
+                    </ul>
                 {% endfor %}
             </ul>
         {% else %}
