@@ -12,15 +12,15 @@ Create repositories, or collections of files, and edit them on your own or share
 
 Technologies used:
 
-* Django
-* node.js
-* Blaze UI
-* Ace editor(https://github.com/ajaxorg/ace)
-* Jquery
-* Fssb(Linux sandbox: https://github.com/adtac/fssb)
+* [Django](https://www.djangoproject.com/) - Python web framework
+* [node.js](https://nodejs.org/en/) - JavaScript platform and runtime
+* [Blaze UI](https://www.blazeui.com/) - CSS toolkit
+* [Ace editor](https://github.com/ajaxorg/ace) - online text editor
+* [jQuery](https://jquery.com/) - JavaScript framework
+* [Fssb](https://github.com/adtac/fssb) - Linux sandboxing
 
 ## Contributors
 
-* Tianyu Chen
-* Adam Chesak
-* Ryan Han
+* [Tianyu Chen](https://github.com/cty123)
+* [Adam Chesak](https://github.com/achesak)
+* [Ryan Han](https://github.com/RyanHan0127)
