@@ -21,6 +21,6 @@ Technologies used:
 
 ## Contributors
 
-* Tianu Chen
+* Tianyu Chen
 * Adam Chesak
 * Ryan Han
