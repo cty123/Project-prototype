@@ -24,6 +24,7 @@
             flex-direction: column;
             height: 100vh;
             position: fixed;
+            color: white;
             bottom: 0;
             width: 100%;
             padding: 20px;
@@ -31,11 +32,11 @@
     </style>
 </head>
 <body>
-    <!--<video autoplay muted loop id="myVideo">
+    <video autoplay muted loop id="myVideo">
             <source src="{% static "videos/background.mp4" %}" type="video/mp4">
-    </video> -->
+    </video>
     <div class="content">
-        <img src="{% static 'logo.png' %}" align="center"/>
+        <img src="{% static 'new_logo.png' %}" align="center"/>
         <p style="text-align: center" >Prototype Editor is an online text editor with code compilation and execution.<br />Work on your own projects
            or share code and collaborate with friends.</p>
         <p><a href="{% url 'profile' %}"><button class="c-button c-button--success" style="padding-left:20px;padding-right:20px">Get started</button></a></p>
