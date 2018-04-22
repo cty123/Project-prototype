@@ -43,44 +43,44 @@
         </ul>
         <div id="body_login" class="o-grid">
             <div class="o-grid__cell">
-                <div class="o-grid-text">
-                    <h1>Profile for {{ user.username }}</h1>
+                <div class="o-grid-text c-card" style="padding: 20px">
+                    <h1 style="margin: 0; padding-bottom: 10px">Profile for {{ user.username }}</h1>
                     <p>Nickname: {{ user.nick_name }}</p>
-                    <p>Joined on {{ user.date_joined }}</p>
                     <p>Email: <a class="c-link" href="mailto:{{ user.email }}">{{ user.email }}</a></p>
+                    <p>Joined on {{ user.date_joined }}</p>
                 </div>
             </div>
-        <div class="o-grid__cell">
-            <div class="o-grid-text">
-                <h1>Change profile details</h1>
-                <form method="post" action="{% url 'profile' %}" autocomplete="off">
-                    {% csrf_token %}
-                    <div class="c-input-group c-input-group--stacked">
-                        <div class="o-field">
-                            <input name="nickname" type="text" class="c-field" placeholder="Nickname">
+            <div class="o-grid__cell">
+                <div class="o-grid-text c-card" style="padding: 20px">
+                    <h1 style="margin: 0; padding-bottom: 10px">Change profile details</h1>
+                    <form method="post" action="{% url 'profile' %}" autocomplete="off">
+                        {% csrf_token %}
+                        <div class="c-input-group c-input-group--stacked">
+                            <div class="o-field">
+                                <input name="nickname" type="text" class="c-field" placeholder="Nickname">
+                            </div>
+                            <div class="o-field">
+                                <input name="email" type="email" class="c-field" placeholder="Email">
+                            </div>
+                            <div class="o-field">
+                                <input name="password" type="password" class="c-field" placeholder="Password">
+                            </div>
+                            <div class="o-field">
+                                <input name="password_confirm" type="password" class="c-field" placeholder="Repeat password">
+                            </div>
+                            <div class="o-field">
+                                <button style="width: 100%" class="c-button c-button--success" type="submit">Save</button>
+                            </div>
                         </div>
-                        <div class="o-field">
-                            <input name="email" type="email" class="c-field" placeholder="Email">
-                        </div>
-                        <div class="o-field">
-                            <input name="password" type="password" class="c-field" placeholder="Password">
-                        </div>
-                        <div class="o-field">
-                            <input name="password_confirm" type="password" class="c-field" placeholder="Repeat password">
-                        </div>
-                        <div class="o-field">
-                            <button style="width: 100%" class="c-button c-button--success" type="submit">Save</button>
-                        </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
+                {% if msg|length != 0%}
+                <div class="c-alert c-alert--error" style="margin-top: 20px" id="login_error_label">
+                                {{ msg }}
+                </div>
+                {% endif %}
             </div>
-            {% if msg|length != 0%}
-            <div class="c-alert c-alert--error" style="margin-top: 20px" id="login_error_label">
-                            {{ msg }}
-            </div>
-            {% endif %}
         </div>
-    </div>
     </div>
 
     {% csrf_token %}
