@@ -57,7 +57,7 @@
                 loading_animation.show();
                 run_button.prop("disabled", true);
                 $('html, body').animate({
-                        scrollTop: loading_animation.offset().top
+                        scrollTop: $(event.target).offset().top
                     }, 1500);
 
                 $.ajax({
