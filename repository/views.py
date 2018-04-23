@@ -94,18 +94,29 @@ class RepositoryFileView(View):
 
         path = request.GET.get("path", "")
         mode = request.GET.get("mode", "")
+        format_mode = request.GET.get("format_mode", "")
 
         if mode == "list":
             files = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f)) and not os.access(os.path.join(path, f), os.X_OK)]
             files.sort()
 
-            formatted_files = "<ul>"
-            for file in files:
-                formatted_files += "<li><a class=\"c-link file_open_item\">" + file + "</a> <a style=\"cursor: pointer; color: red\" class=\"file_delete_item\">&times;</a></li>"
-            formatted_files += "</ul>"
+            if format_mode == "manage":
+                formatted_files = "<ul>"
+                for file in files:
+                    formatted_files += "<li>" + file + " <a style=\"cursor: pointer; color: #4caf50\" class=\"file_preview_item\" data-file=\"" + file + "\">(preview)</a>" + \
+                                                       " <a style=\"cursor: pointer; color: red\" class=\"file_delete_item\" data-file=\"" + file + "\">&times;</a>"
+                formatted_files += "</ul>"
 
-            if len(files) == 0:
-                formatted_files = "<p>No files yet!</p>"
+                if len(files) == 0:
+                    formatted_files = "<p>No files yet!</p>"
+            else:
+                formatted_files = "<ul>"
+                for file in files:
+                    formatted_files += "<li><a class=\"c-link file_open_item\">" + file + "</a> <a style=\"cursor: pointer; color: red\" class=\"file_delete_item\">&times;</a></li>"
+                formatted_files += "</ul>"
+
+                if len(files) == 0:
+                    formatted_files = "<p>No files yet!</p>"
 
             return HttpResponse(formatted_files)
 
@@ -114,6 +125,16 @@ class RepositoryFileView(View):
 
             f = open(os.path.join(path, filename), "r")
             text = f.read()
+            f.close()
+
+            return HttpResponse(text)
+
+        elif mode == "preview":
+
+            filename = request.GET.get("filename", "")
+
+            f = open(os.path.join(path, filename), "r")
+            text = "\n".join(f.readlines()[:20])
             f.close()
 
             return HttpResponse(text)
@@ -154,7 +175,7 @@ class RepositoryManageView(View):
                 # Redirect to previous page
                 return redirect('files')
             repo = Repository.objects.get(name=repo_name, user=user)
-            return render(request, 'manage.html', {"repo": repo, "repo_name": repo_name, "user": user})
+            return render(request, 'manage.html', {"repo": repo, "repo_name": repo_name, "user": user, "path": repo.repo_path})
         except UserProfile.DoesNotExist:
             # Redirect to previous page
             return redirect('files')

@@ -406,16 +406,12 @@
 
     <div id="body">
 
-        <div class="c-card">
-            <div class="c-card__item c-card__item--success o-media">
-                <div class="o-media__body">
-                    {% if user.username == owner_username %}
-                        <p class="c-paragraph">Currently editing the repository "{{ repo_name }}", owned by you.</p>
-                    {% else %}
-                        <p class="c-paragraph">Currently editing the repository "{{ repo_name}}", owned by {{ owner_nickname }} ({{ owner_username }}).</p>
-                    {% endif %}
-                </div>
-            </div>
+        <div class="c-alert c-alert--success">
+            {% if user.username == owner_username %}
+                <p class="c-paragraph">Currently editing the repository "{{ repo_name }}", owned by you.</p>
+            {% else %}
+                <p class="c-paragraph">Currently editing the repository "{{ repo_name}}", owned by {{ owner_nickname }} ({{ owner_username }}).</p>
+            {% endif %}
         </div>
 
         <div class="c-input-group" id="editor_controls">

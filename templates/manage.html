@@ -19,6 +19,21 @@
             sharing_label.hide();
             transfer_label.hide();
 
+            $.ajax({
+                    type: "GET",
+                    url: "{% url 'repo_files' %}",
+                    data: {
+                        "mode": "list",
+                        "format_mode": "manage",
+                        "path": "workspaces/{{ path }}"
+                    },
+                    success: (result) => {
+                        $("#files_list").html(result);
+
+                        bind_open_event();
+                    }
+                });
+
             // Handler: share repository
             $("#repository_sharing_button").click(() => {
                 let shared_username = $("#repository_share_user").val();
@@ -123,6 +138,11 @@
                 });
             });
 
+            // Handler: preview dialog close button
+            $("#file_preview_display_close").click((event) => {
+                $("#file_preview_display").addClass("u-display-none");
+            });
+
             let csrfSafeMethod = (method) =>{
                 // these HTTP methods do not require CSRF protection
                 return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
@@ -147,7 +167,7 @@
             }
             $("#shared_user_list").html(list);
             let user_paragraph = $("#shared_user_paragraph");
-            if (result.length == 0) {
+            if (result.length === 0) {
                 user_paragraph.text("This repository is not shared with any other users.")
             } else {
                 user_paragraph.text("This repository is shared with the following users:");
@@ -182,6 +202,56 @@
                 });
             });
         };
+        let bind_open_event = () => {
+            $(".file_preview_item").click((event) => {
+                let filename = $(event.target).data("file");
+
+                $.ajax({
+                    type: "GET",
+                    url: "{% url 'repo_files' %}",
+                    data: {
+                        "path": "workspaces/{{ path }}",
+                        "filename": filename,
+                        "mode": "preview"
+                    },
+                    success: (result) => {
+                        $("#file_preview_display").removeClass("u-display-none");
+                        $("#file_preview_display_title").text("Preview for \"" + filename + "\"");
+                        $("#file_preview_display_body").text(result);
+                    }
+                });
+            });
+
+            $(".file_delete_item").click((event) => {
+                let filename = $(event.target).data("file");
+
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'repo_files' %}",
+                    data: {
+                        "path": "workspaces/{{ path }}",
+                        "filename": filename,
+                        "mode": "delete"
+                    },
+                    success: (result) => {
+                        $.ajax({
+                            type: "GET",
+                            url: "{% url 'repo_files' %}",
+                            data: {
+                                "mode": "list",
+                                "format_mode": "manage",
+                                "path": "workspaces/{{ path }}"
+                            },
+                            success: (result) => {
+                                $("#files_list").html(result);
+
+                                bind_open_event();
+                            }
+                        });
+                    }
+                });
+            });
+        }
     </script>
 </head>
 <body>
@@ -202,6 +272,12 @@
         <h1>Details for "{{ repo.name }}"</h1>
 
         <p>Created on {{ repo.date }}</p>
+
+        <h3>Files</h3>
+
+        <div id="files_list"></div>
+
+        <p><a class="c-link" href="{% url 'e' user.username repo.name %}">Open in editor</a></p>
 
         <h3>Shared users</h3>
 
@@ -263,6 +339,23 @@
         <div style="text-align: center">
             <label class="c-field c-field--choice"><input type="checkbox" id="repository_delete_checkbox" /> I understand this is permanent and wish to continue</label>
             <button id="repository_delete_button" class="c-button c-button--error" disabled>Delete repository</button>
+        </div>
+    </div>
+
+    <!-- file preview dialog -->
+    <div id="file_preview_display" class="u-display-none">
+        <div class="c-overlay c-overlay--visible"></div>
+        <div class="o-modal">
+            <div class="c-card">
+                <header class="c-card__header">
+                    <button id="file_preview_display_close" type="button" class="c-button c-button--close">&times;</button>
+                    <h2 id="file_preview_display_title" class="c-heading">Preview</h2>
+                </header>
+                <div class="c-card__body">
+                    <p>Showing the first 20 lines:</p>
+                    <pre id="file_preview_display_body"></pre>
+                </div>
+            </div>
         </div>
     </div>
 
