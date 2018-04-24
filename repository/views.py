@@ -134,7 +134,7 @@ class RepositoryFileView(View):
             filename = request.GET.get("filename", "")
 
             f = open(os.path.join(path, filename), "r")
-            text = "\n".join(f.readlines()[:20])
+            text = "".join(f.readlines()[:20])
             f.close()
 
             return HttpResponse(text)
