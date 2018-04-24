@@ -18,6 +18,7 @@ Technologies used:
 * [Ace editor](https://github.com/ajaxorg/ace) - online text editor
 * [jQuery](https://jquery.com/) - JavaScript framework
 * [Fssb](https://github.com/adtac/fssb) - Linux sandboxing
+* [Nodejs Server](http://ben.akrin.com/?p=4197) - Allows collaborative editing
 
 ## Contributors
 
