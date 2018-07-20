@@ -16,7 +16,7 @@ Front page
 
 
 Login & Register page
-https://image.ibb.co/jj2mby/collab_editing.gif
+![]https://image.ibb.co/jj2mby/collab_editing.gif
 https://image.ibb.co/nofHid/frontcover.png
 https://image.ibb.co/gKy3Od/login_register.png
 https://image.ibb.co/cMKopJ/repo_manage.png
