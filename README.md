@@ -8,6 +8,23 @@ Prototype Editor is an online code editor with code compilation and execution. C
 
 Create repositories, or collections of files, and edit them on your own or share with other contributors. Live collaborative editing allows you to see what your collaborators are working on.
 
+## Features
+
+Watch the full demo: https://www.youtube.com/watch?v=XUDUX_UvmvM
+
+Front page
+
+
+Login & Register page
+https://image.ibb.co/jj2mby/collab_editing.gif
+https://image.ibb.co/nofHid/frontcover.png
+https://image.ibb.co/gKy3Od/login_register.png
+https://image.ibb.co/cMKopJ/repo_manage.png
+Repo management page
+
+Collaborative editing
+
+
 ## Technical Information
 
 Technologies used:
