@@ -13,17 +13,19 @@ Create repositories, or collections of files, and edit them on your own or share
 Watch the full demo: https://www.youtube.com/watch?v=XUDUX_UvmvM
 
 Front page
+![Front](https://image.ibb.co/nofHid/frontcover.png)
 
 
 Login & Register page
-![]https://image.ibb.co/jj2mby/collab_editing.gif
-https://image.ibb.co/nofHid/frontcover.png
-https://image.ibb.co/gKy3Od/login_register.png
-https://image.ibb.co/cMKopJ/repo_manage.png
+![Login & Register](https://image.ibb.co/gKy3Od/login_register.png)
+
+
 Repo management page
+![Repo](https://image.ibb.co/cMKopJ/repo_manage.png)
+
 
 Collaborative editing
-
+![Collaborative](https://image.ibb.co/jj2mby/collab_editing.gif)
 
 ## Technical Information
 
